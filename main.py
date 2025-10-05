@@ -28,7 +28,7 @@ import time
 from typing import Annotated, TypedDict, Literal
 
 # LangGraph core
-from langgraph.graph import StateGraph, END
+from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 
@@ -43,54 +43,180 @@ from langchain_core.tools import tool
 
 # OpenAI chat model wrapper for LangChain
 from langchain_openai import ChatOpenAI
-from langgraph.graph import StateGraph, START, END
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Tools (Phase 1: simple, deterministic stubs so the graph runs anywhere)
-# Later we can replace with real HTTP APIs or your own backends.
+# Tools — real HTTP-backed implementations (Wikipedia & DuckDuckGo; Open-Meteo)
+# Notes:
+#   * No API keys required
+#   * Keep short timeouts; return concise strings for model friendliness
+#   * If an API fails, degrade gracefully to a helpful message
 # ──────────────────────────────────────────────────────────────────────────────
+
+import requests
+from datetime import datetime, timedelta, timezone
+
+UA = {"User-Agent": "LangGraph-Demo/1.0 (+https://example.local)"}
 
 @tool("search_tool")
 def search_tool(query: str) -> str:
-    """Search the web or a knowledge base for a short answer. (Stub)
+    """Search the web for a concise answer/snippet (Wikipedia→DuckDuckGo fallback).
 
     Args:
-        query: What to search for.
+        query: natural language query.
     Returns:
-        A brief textual result (stubbed here for demo).
+        A short textual snippet.
     """
-    # In Phase 1 baseline, keep it deterministic & offline-friendly.
-    # Replace with your real search connector later.
-    print("search_tool is called. Executing...")
+    print("[INFO] search_tool is called. Executing...")
     
-    canned = {
-        "tokyo must-see": "Senso-ji, Meiji Shrine, Tokyo Skytree, Shibuya Crossing, TeamLab Planets.",
-        "kyoto temples": "Kiyomizu-dera, Fushimi Inari Taisha, Kinkaku-ji, Ginkaku-ji, Ryoan-ji.",
-    }
-    # Super simple match; real impl: send HTTP request to your search API.
-    for k, v in canned.items():
-        if k in query.lower():
-            return v
-    return f"[search_stub] No direct match. Try refining: '{query}'."
+    q = query.strip()
+    try:
+        # 1) Wikipedia summary API (best-effort)
+        r = requests.get(
+            "https://en.wikipedia.org/api/rest_v1/page/summary/" + requests.utils.quote(q),
+            headers=UA,
+            timeout=4,
+        )
+        if r.status_code == 200:
+            data = r.json()
+            # Prefer 'extract' (plain-text summary)
+            extract = data.get("extract")
+            if extract:
+                title = data.get("title", "Wikipedia")
+                return f"{title}: {extract}"
+    except Exception:
+        pass
+
+    try:
+        # 2) DuckDuckGo Instant Answer API
+        r = requests.get(
+            "https://api.duckduckgo.com/",
+            params={"q": q, "format": "json", "no_html": 1, "skip_disambig": 1},
+            headers=UA,
+            timeout=4,
+        )
+        if r.status_code == 200:
+            data = r.json()
+            abstract = data.get("AbstractText")
+            if abstract:
+                return abstract
+            heading = data.get("Heading")
+            if heading:
+                return heading
+    except Exception:
+        pass
+
+    return f"[search] No concise result for: {q}. Try rephrasing or a more specific query."
+
+
+def _parse_date_label(date_label: str) -> str:
+    now = datetime.now(timezone.utc)
+    dl = (date_label or "today").strip().lower()
+    if dl in {"today", "now"}:
+        d = now
+    elif dl in {"tomorrow", "tmr"}:
+        d = now + timedelta(days=1)
+    else:
+        # Try ISO-like date
+        try:
+            d = datetime.fromisoformat(dl).replace(tzinfo=timezone.utc)
+        except Exception:
+            d = now
+    return d.strftime("%Y-%m-%d")
 
 
 @tool("weather_tool")
 def weather_tool(city: str, date: str = "today") -> str:
-    """Get weather for a city on a given date. (Stub)
+    """Get simple weather (Open-Meteo). Supports 'today'/'tomorrow' or ISO date.
 
     Args:
-        city: City name (e.g., 'Tokyo').
-        date: Natural language date like 'today'/'tomorrow' or '2025-10-05'.
+        city: e.g., 'Tokyo' or 'Kyoto'.
+        date: 'today' | 'tomorrow' | 'YYYY-MM-DD'.
     Returns:
-        A short weather string (stubbed).
+        A concise weather sentence.
     """
-    print("weather_tool is called. Executing...")
+    print("[INFO] weather_tool is called. Executing...")
     
-    city_l = city.strip().lower()
-    if city_l in {"tokyo", "kyoto", "osaka"}:
-        return f"Weather for {city.title()} on {date}: mild, partly cloudy, chance of showers in the evening."
-    return f"Weather for {city.title()} on {date}: data unavailable in stub."
+    city_q = (city or "").strip()
+    if not city_q:
+        return "[weather] Please provide a city name."
+
+    try:
+        # Geocoding → lat/lon
+        geo = requests.get(
+            "https://geocoding-api.open-meteo.com/v1/search",
+            params={"name": city_q, "count": 1, "language": "en"},
+            headers=UA,
+            timeout=4,
+        )
+        if geo.status_code != 200:
+            return f"[weather] Geocoding failed for {city_q}."
+        g = geo.json()
+        results = g.get("results") or []
+        if not results:
+            return f"[weather] City not found: {city_q}."
+        lat = results[0]["latitude"]
+        lon = results[0]["longitude"]
+        canonical = results[0].get("name", city_q)
+        country = results[0].get("country", "")
+
+        # Date handling
+        target = _parse_date_label(date)
+
+        # Daily forecast
+        fc = requests.get(
+            "https://api.open-meteo.com/v1/forecast",
+            params={
+                "latitude": lat,
+                "longitude": lon,
+                "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode",
+                "timezone": "UTC",
+                "start_date": target,
+                "end_date": target,
+            },
+            headers=UA,
+            timeout=4,
+        )
+        if fc.status_code != 200:
+            return f"[weather] Forecast fetch failed for {canonical}."
+        d = fc.json()
+        daily = d.get("daily", {})
+        dates = daily.get("time", [])
+        if not dates:
+            return f"[weather] No forecast data for {canonical} on {target}."
+
+        tmax = daily.get("temperature_2m_max", [None])[0]
+        tmin = daily.get("temperature_2m_min", [None])[0]
+        rain = daily.get("precipitation_sum", [None])[0]
+        code = daily.get("weathercode", [None])[0]
+
+        desc_map = {
+            0: "clear",
+            1: "mainly clear",
+            2: "partly cloudy",
+            3: "overcast",
+            45: "fog",
+            48: "depositing rime fog",
+            51: "light drizzle",
+            53: "drizzle",
+            55: "dense drizzle",
+            61: "light rain",
+            63: "rain",
+            65: "heavy rain",
+            71: "light snow",
+            73: "snow",
+            75: "heavy snow",
+            80: "rain showers",
+            81: "heavy showers",
+            95: "thunderstorm",
+        }
+        desc = desc_map.get(code, "mixed conditions")
+        rain_txt = f", precip {rain}mm" if rain is not None else ""
+        return f"Weather in {canonical}{' ('+country+')' if country else ''} on {target}: {desc}, min {tmin}°C / max {tmax}°C{rain_txt}."
+
+    except Exception as e:
+        return f"[weather] Error: {e}"
+
 
 TOOLS = [search_tool, weather_tool]
 
@@ -172,9 +298,9 @@ def run_cli(app):
         state["messages"].append(HumanMessage(content=user_inp))
 
         # Run one turn of the graph
-        result = app.invoke(state)
+        state = app.invoke(state)
         # 'result' contains the reduced state after this step
-        state = result  # keep rolling state for the session
+        # keep rolling state for the session
 
         # Find the last AI message to print
         last_ai = None
