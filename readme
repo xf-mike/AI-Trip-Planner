@@ -1,0 +1,21 @@
+### How to run it on bare Linux / WSL
+
+1. uv venv
+2. source .venv/bin/activate
+3. uv pip install -U langgraph langchain langchain-openai requests pydantic
+4. python main.py
+5. deactivate (close the virtual environment after running)
+
+
+### How to run it on Docker
+
+1. docker build -t langgraph-demo:phase1 .
+2. export OPENAI_API_KEY=************** (Your own key)
+3. docker run -it --rm \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  langgraph-demo:phase1
+
+
+### How to run it on K8s cluster
+
+TODO
