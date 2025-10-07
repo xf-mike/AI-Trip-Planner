@@ -11,14 +11,11 @@ class MessagesState(TypedDict):
     messages: Annotated[list, add_messages]
 
 
-def make_app(llm_invoke, tools: list):
+def make_app(llm_invoke, tools: list, context_scale: int = 5):
     
-    MAX_TURNS_IN_CONTEXT = int(os.environ.get("MAX_TURNS_IN_CONTEXT", "5"))
-    print(f"Memory: Short | Max context turns: {MAX_TURNS_IN_CONTEXT}")
-
     # Limit the context memory size before feeding to llm
     def call_agent(state: MessagesState) -> dict:
-        msgs = trim_context(state["messages"], MAX_TURNS_IN_CONTEXT)
+        msgs = trim_context(state["messages"], context_scale)
         return {"messages": [llm_invoke(msgs)]}
 
     builder = StateGraph(MessagesState)

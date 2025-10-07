@@ -3,7 +3,7 @@ from __future__ import annotations
 import os, json, time, math, re
 from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional, Tuple
-
+from langchain_core.messages import SystemMessage, HumanMessage
 import numpy as np
 from langchain_openai import OpenAIEmbeddings
 from llm import _get_api_key  # 复用你已有的取 key 逻辑
@@ -178,3 +178,28 @@ def format_mem_snippets(snips: List[Tuple[MemoryItem, float]], max_chars: int = 
         if sum(len(x) for x in lines) > max_chars:
             break
     return "Relevant prior context:\n" + "\n".join(lines)
+
+
+
+def compose_tmp_message(state: dict, mem: SimpleMemory):
+    """ Search based on the most recent user input and return 
+    a list of messages that are only valid in this round."""
+    # take the last one HumanMessage as query
+    state_msgs = state["messages"]
+    q = None
+    for m in reversed(state_msgs):
+        if isinstance(m, HumanMessage):
+            q = m.content
+            break
+    if not q:
+        return state_msgs
+    snips = mem.retrieve(q, k=4, min_sim=0.55)
+    mem_text = format_mem_snippets(snips)
+    if not mem_text:
+        return state_msgs
+
+    # Insert a temporary SystemMessage after the first SystemMessage (do not write back to state)
+    msgs = list(state_msgs)
+    insert_at = 1 if msgs and isinstance(msgs[0], SystemMessage) else 0
+    msgs.insert(insert_at, SystemMessage(content=mem_text))
+    return msgs
