@@ -4,7 +4,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 
-from context import trim_context
+from .context import trim_context
 
 
 class MessagesState(TypedDict):

@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Optional, Tuple
 from langchain_core.messages import SystemMessage, HumanMessage
 import numpy as np
 from langchain_openai import OpenAIEmbeddings
-from llm import _get_api_key  # 复用你已有的取 key 逻辑
+from .llm import _get_api_key
 
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "text-embedding-3-small")
 

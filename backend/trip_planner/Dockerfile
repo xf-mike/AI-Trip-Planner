@@ -10,6 +10,6 @@ ENV PYTHONIOENCODING=utf-8
 ENV PYTHONUTF8=1
 
 
-COPY . .
+COPY . trip_planner
 # Provide API key via a file named API_KEY or env OPENAI_API_KEY at runtime
-CMD ["python", "main.py"]
+CMD ["python", "-m", "trip_planner.main"]
