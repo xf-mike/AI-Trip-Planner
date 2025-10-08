@@ -5,6 +5,7 @@ cd frontend/
 npm i
 npm run build
 mv dist ../backend/
+cd ../backend/
 sudo apt install -y python3-pip python3-venv
 python3 -m venv .venv
 source .venv/bin/activate
