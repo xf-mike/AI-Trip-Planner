@@ -13,4 +13,4 @@ pip install --upgrade pip
 pip install -r requirements.txt
 clear
 # export OPENAI_API_KEY=(Your own key)
-python production.py
+python production.py &
