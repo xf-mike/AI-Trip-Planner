@@ -15,6 +15,14 @@ export default function NewSessionView({ token, onCreated }: Props) {
     onCreated(res.session_id, name)
   }
 
+  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if ((e as any).isComposing) return
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      create()
+    }
+  }
+
   return (
     <div style={{padding:24, marginLeft: '200px'}}>
       <h3>New Session</h3>
@@ -22,6 +30,7 @@ export default function NewSessionView({ token, onCreated }: Props) {
         <input
           value={title}
           onChange={e=>setTitle(e.target.value)}
+          onKeyDown={onKeyDown}
           placeholder="Session title"
           style={{flex:1, padding:12, border:'1px solid #ddd', borderRadius:8}}
         />

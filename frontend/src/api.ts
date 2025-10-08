@@ -38,14 +38,13 @@ export async function getConversationHistory(token: string, session_id: string) 
   return r.json() as Promise<{ messages: Msg[] }>;
 }
 
-export async function chatOnce(token: string, session_id: string, text: string, use_ltm = true) {
+export async function chatOnce(token: string, session_id: string, text: string) {
   const r = await fetch(`${BASE}/chat?stream=0`, {
     method: 'POST',
     headers: {'Content-Type':'application/json', 'X-Identity-Token': token},
     body: JSON.stringify({
       session_id,
-      message: { type: 'human', content: text },
-      use_ltm
+      message: { type: 'human', content: text }
     })
   });
   if (!r.ok) throw new Error('chat failed');

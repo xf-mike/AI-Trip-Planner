@@ -71,7 +71,7 @@ export default function ChatView({ token, session_id }: Props) {
     setMessages(prev => [...prev, { type: 'human', content: text }])
 
     try {
-      const { last_ai } = await chatOnce(token, session_id, text, true)
+      const { last_ai } = await chatOnce(token, session_id, text)
       setMessages(prev => [...prev, last_ai])
     } catch (e) {
       setMessages(prev => [...prev, { type:'ai', content: '_[error: request failed]_' }])

@@ -49,6 +49,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, Tool
 # -------------------- config --------------------
 DATA_ROOT = os.environ.get("DATA_ROOT", "./data")
 USE_LTM = os.environ.get("USE_LTM", "0").lower() in {"1", "true", "yes"}
+VERBOSE = os.environ.get("VERBOSE", "1").lower() in {"1", "true", "yes"}
 MAX_TURNS = int(os.environ.get("MAX_TURNS_IN_CONTEXT", "16"))
 KEEP_SYSTEM = int(os.environ.get("KEEP_SYSTEM", "2"))
 
@@ -206,8 +207,8 @@ def create_user():
     with open(_user_token_hash_path(user_id), "w", encoding="utf-8") as f:
         f.write(token_h)
 
-    # init memory with name/description (if USE_LTM and memory module available)
-    if USE_LTM and SimpleMemory is not None:
+    # init memory with name/description (if memory module available)
+    if SimpleMemory is not None:
         try:
             mem = SimpleMemory(path=_user_memory_path(user_id))
             if name:
@@ -293,7 +294,7 @@ def chat():
     data = request.get_json(force=True)
     session_id = data.get("session_id", "")
     message = data.get("message", {})
-    use_ltm = bool(data.get("use_ltm", USE_LTM))
+
     if not session_id or not message:
         return jsonify({"error":"session_id and message required"}), 400
 
@@ -308,7 +309,7 @@ def chat():
         msgs_lc.append(_to_lc({"type": r.get("type"), "content": r.get("content")}))
 
     # 3) optional memory injection (one-off SystemMessage)
-    if use_ltm and SimpleMemory is not None:
+    if USE_LTM and SimpleMemory is not None:
         last_human = None
         for m in reversed(msgs_lc):
             if isinstance(m, HumanMessage):
@@ -316,7 +317,7 @@ def chat():
         if last_human:
             try:
                 mem = SimpleMemory(path=_user_memory_path(user_id))
-                snips = mem.retrieve(last_human, k=4, min_sim=0.55, verbose=False)
+                snips = mem.retrieve(last_human, k=4, min_sim=0.55, verbose=VERBOSE)
                 if snips:
                     mem_text = format_mem_snippets(snips)
                     insert_at = 1 if msgs_lc and isinstance(msgs_lc[0], SystemMessage) else 0
@@ -333,8 +334,8 @@ def chat():
     # 5) append AI to persistent state
     _append_jsonl(statep, {"type": "ai", "content": ai_text, "ts": _now()})
 
-    # 6) optional: write short memory
-    if use_ltm and SimpleMemory is not None:
+    # 6) optional: write to long term memory
+    if USE_LTM and SimpleMemory is not None:
         try:
             mem = SimpleMemory(path=_user_memory_path(user_id))
             last_user = message.get("content","")
