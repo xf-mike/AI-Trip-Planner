@@ -1,5 +1,5 @@
-# server.py
-# Minimal multi-user + multi-session backend (Flask)
+# production_server.py
+# Dev server + Static frontend hosting
 # Endpoints:
 #   POST /api/create_user                -> { user_id, identity_token }
 #   POST /api/create_session             -> { session_id }
@@ -19,11 +19,10 @@
 # - If context.trim_context exists, we call it; else we pass messages as-is.
 
 from __future__ import annotations
-import os, json, time, uuid, hashlib
+import os, json, time, uuid, hashlib, logging
 from typing import Any, Dict, List, Optional
 
-from flask import Flask, request, jsonify, Response
-from flask_cors import CORS
+from flask import Flask, request, jsonify, Response, send_from_directory
 
 # your project modules
 from trip_planner.orchestrate import make_app
@@ -48,18 +47,35 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, Tool
 
 # -------------------- config --------------------
 DATA_ROOT = os.environ.get("DATA_ROOT", "./data")
-USE_LTM = os.environ.get("USE_LTM", "0").lower() in {"1", "true", "yes"}
+USE_LTM = os.environ.get("USE_LTM", "1").lower() in {"1", "true", "yes"}
 VERBOSE = os.environ.get("VERBOSE", "1").lower() in {"1", "true", "yes"}
 MAX_TURNS = int(os.environ.get("MAX_TURNS_IN_CONTEXT", "16"))
 KEEP_SYSTEM = int(os.environ.get("KEEP_SYSTEM", "2"))
 
-app = Flask(__name__)
-CORS(app)
+# Vite build 输出目录
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "dist")
+
+# 让 Flask 直接把 dist 当静态根目录
+app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="/")
+
+# 关闭 werkzeug 自带的访问日志
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)  # 只输出错误日志（不打印普通请求）
 
 # model & orchestrator (stateless)
 _llm = init_llm(TOOLS)
 _invoke = make_app(_llm, TOOLS)
 print(f"Memory: Short{'+Long' if USE_LTM else ''} | Max context scale: {MAX_TURNS}")
+
+# -------------------- Frontend Hosting --------------------
+# 前端路由兜底：不是 /api 的都交给 index.html
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def catch_all(path):
+    # /api/* 由后端处理；其余路径返回前端入口
+    if path.startswith("api/"):
+        return ("Not Found", 404)
+    return send_from_directory(app.static_folder, "index.html")
 
 # -------------------- utils --------------------
 def _now() -> float:

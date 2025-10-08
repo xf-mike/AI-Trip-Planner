@@ -27,6 +27,6 @@ def _get_api_key() -> str:
 def init_llm(tools: List):
     """Factory returning an LLM bound with the provided tools."""
     llm = ChatOpenAI(model=MODEL, temperature=TEMPERATURE, api_key=_get_api_key())
-    print(f"Model: {MODEL}  |  Temp: {TEMPERATURE}")
+    print(f"Model: {MODEL} | Temp: {TEMPERATURE}")
     print(f"Tools: {' | '.join(t.name for t in tools)}")
     return llm.bind_tools(tools).invoke

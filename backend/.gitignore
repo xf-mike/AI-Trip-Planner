@@ -4,3 +4,4 @@ __pycache__
 memory_store.jsonl
 user_data
 ADMIN_IDENTITY_TOKEN
+dist

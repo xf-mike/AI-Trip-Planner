@@ -10,9 +10,11 @@ export default function NewSessionView({ token, onCreated }: Props) {
   const [title, setTitle] = useState('')
 
   const create = async () => {
-    const name = title.trim() || `session-${Date.now()}`
-    const res = await createSession(token, name)
-    onCreated(res.session_id, name)
+    if (title.trim() != '') {
+      const name = title.trim() || `session-${Date.now()}`
+      const res = await createSession(token, name)
+      onCreated(res.session_id, name)
+    }
   }
 
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
