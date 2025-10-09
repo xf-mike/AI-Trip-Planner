@@ -9,12 +9,11 @@ if tmux has-session -t $SESSION 2>/dev/null; then
     echo "Session '$SESSION' already exists. Attaching..."
     tmux attach -t $SESSION
 else
-    echo "Starting new tmux session '$SESSION'..."
     tmux new -d -s $SESSION "python production.py"
+    echo "Server is running in the backgroud session '$SESSION'..."
 fi
 
 deactivate
-clear
 
-# (attach session tmux attach -t backend
-# (detach session) (Ctrl+b, d)
+echo "(attach session): tmux attach -t '$SESSION"
+echo "(detach session): (Ctrl+b, d)"
