@@ -11,6 +11,5 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+deactivate
 clear
-# export OPENAI_API_KEY=(Your own key)
-python production.py &
