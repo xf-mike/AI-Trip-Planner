@@ -15,5 +15,5 @@ fi
 
 deactivate
 
-echo "(attach session): tmux attach -t '$SESSION"
+echo "(attach session): tmux attach -t $SESSION"
 echo "(detach session): (Ctrl+b, d)"
