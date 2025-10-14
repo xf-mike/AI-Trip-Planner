@@ -3,11 +3,13 @@ from datetime import datetime, timedelta, timezone
 from langchain_core.tools import tool
 
 UA = {"User-Agent": "LangGraph-Demo/1.0 (+https://example.local)"}
+meta = {"verbose": True}
 
 @tool("search_tool")
 def search_tool(query: str) -> str:
     """Search the web for a concise answer/snippet (Wikipedia→DuckDuckGo fallback)."""
-    print("[INFO] search_tool is called. Executing...")
+    if meta["verbose"]:
+        print("[INFO] search_tool is called. Executing...")
     q = (query or "").strip()
     try:
         r = requests.get(
@@ -63,7 +65,8 @@ def _parse_date_label(date_label: str) -> str:
 @tool("weather_tool")
 def weather_tool(city: str, date: str = "today") -> str:
     """Get simple weather (Open-Meteo). Supports 'today'/'tomorrow' or ISO date."""
-    print("[INFO] weather_tool is called. Executing...")
+    if meta["verbose"]:
+        print("[INFO] weather_tool is called. Executing...")
 
     city_q = (city or "").strip()
     if not city_q:
