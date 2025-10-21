@@ -1,0 +1,24 @@
+{
+  "background_info": "user_name: Sam, user_description: Planning a trip to Paris.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "I want to visit the Eiffel Tower."
+    },
+    {
+      "owner": "agent",
+      "content": "The Eiffel Tower is a fantastic choice! It offers stunning views of Paris. Are you interested in ticket prices or the best time to go?"
+    },
+    {
+      "owner": "user",
+      "content": "I'm actually worried about strikes. Are there any transit strikes or closures scheduled in Paris for *this* upcoming weekend that would affect my visit?"
+    }
+  ],
+  "expected": {
+    "task_goal": "Search for any announced transit strikes or major closures in Paris for the upcoming weekend.",
+    "use_tools": [
+      "web_search"
+    ],
+    "Personalize": "N/A"
+  }
+}

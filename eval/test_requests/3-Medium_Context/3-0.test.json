@@ -1,0 +1,40 @@
+{
+  "background_info": "user_name: Chloe, user_description: A certified yoga instructor and a strict vegetarian for over 10 years. Loves wellness retreats and quiet, mindful experiences.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, I'm back again. I'm starting to plan a trip to Tokyo for this spring."
+    },
+    {
+      "owner": "agent",
+      "content": "Welcome back, Chloe! It's great to help you plan another trip. Tokyo in the spring is beautiful with the cherry blossoms. Given your love for wellness and mindful experiences, we could look into some unique tea ceremonies, visit quiet gardens like Shinjuku Gyoen, or even find a day trip to a temple. And of course, I'll focus on finding the best vegetarian and vegan dining for you."
+    },
+    {
+      "owner": "user",
+      "content": "Thanks. Actually, for this specific trip, my partner is coming with me, and he is a huge foodie. He *really* wants to try the famous authentic Wagyu beef. I know this is very different from my usual trips."
+    },
+    {
+      "owner": "agent",
+      "content": "That's a very common and understandable situation when traveling with others! So, the goal is to find a restaurant that excels at two very different things: top-tier, authentic Wagyu for your partner, and equally high-quality, creative vegetarian options for you. This can be tricky in traditional Wagyu-only places, but I can look for modern or high-end fusion restaurants that cater to this exact need. Do you have a preferred area in Tokyo or a budget per person for this meal?"
+    },
+    {
+      "owner": "user",
+      "content": "That's exactly it. Let's aim for somewhere in the Shinjuku or Shibuya area, since we'll likely be staying there. For budget, maybe around 15,000 JPY per person for dinner? I want it to be a special meal."
+    },
+    {
+      "owner": "agent",
+      "content": "Perfect. Shinjuku and Shibuya have countless high-end dining options. So, just to confirm, I will search for restaurants in the Shinjuku or Shibuya area, with a budget of approximately 15,000 JPY per person, that have excellent reviews for *both* their Wagyu beef and their vegetarian main courses."
+    },
+    {
+      "owner": "user",
+      "content": "Yes, that is exactly what I need. Please find two or three specific restaurant names that I can look up."
+    }
+  ],
+  "expected": {
+    "task_goal": "Search for and recommend 2-3 specific restaurants in the Shinjuku or Shibuya area.",
+    "use_tools": [
+      "web_search"
+    ],
+    "Personalize": "The agent must override the user's long-term 'strict vegetarian' preference (from background_info) based on the explicit, new request in this session (intra-session context). The search must satisfy two conflicting requirements: 'authentic Wagyu' AND 'excellent vegetarian options', within the specified '15,000 JPY' budget and 'Shinjuku/Shibuya' location."
+  }
+}

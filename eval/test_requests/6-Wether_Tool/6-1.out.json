@@ -1,0 +1,21 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "Tomorrow in New York City, expect rain with temperatures ranging from 11.5°C to 16.7°C. With this weather, you might want to consider indoor activities or bring an umbrella if you plan to be outdoors. Would you like suggestions for indoor activities?",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": true,
+    "memory_injected": [
+      1,
+      0
+    ],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "Weather in New York (United States) on 2025-10-22: rain, min 11.5°C / max 16.7°C, precip 6.9mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

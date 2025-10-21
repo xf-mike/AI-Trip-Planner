@@ -1,0 +1,33 @@
+{
+  "background_info": "user_name: Mark, user_description: Traveling with two young children, ages 6 and 8. Looking for family-friendly activities.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi! I want to plan a weekend trip to Seattle."
+    },
+    {
+      "owner": "agent",
+      "content": "Hello Mark! Planning a trip for the family can be exciting. Seattle has many great options for kids. What are you most interested in seeing?"
+    },
+    {
+      "owner": "user",
+      "content": "I'd love to see the main city sights, but I need to make sure everything is engaging for my kids. I'm also looking for casual places to eat where kids are welcome."
+    },
+    {
+      "owner": "agent",
+      "content": "Understood. The priority is 'family-friendly' and 'engaging for kids'. What's the weather looking like for this weekend?"
+    },
+    {
+      "owner": "user",
+      "content": "Oh, good question. Can you check the weather for me for this coming Saturday? And based on that, suggest one activity and a place for dinner."
+    }
+  ],
+  "expected": {
+    "task_goal": "Check the weather for the upcoming Saturday in Seattle, then recommend one activity and one dinner location.",
+    "use_tools": [
+      "weather_lookup",
+      "web_search"
+    ],
+    "Personalize": "The activity suggestion should be weather-dependent and must be 'family-friendly' and 'engaging for kids' (from background_info and conversation). The dinner recommendation must be 'casual' and 'kid-friendly' (from conversation)."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "background_info": "user_name: Anna, user_description: Packing for a trip.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, can you tell me what the weather forecast is for Boston this coming Friday? I need to know if I should pack a heavy coat."
+    }
+  ],
+  "expected": {
+    "task_goal": "Find the weather forecast for Boston for the upcoming Friday.",
+    "use_tools": [
+      "weather_lookup"
+    ],
+    "Personalize": "N/A"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "background_info": "user_name: Carlos, user_description: A tourist interested in history.",
+  "previous_conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, I'm planning a trip to Rome."
+    },
+    {
+      "owner": "agent",
+      "content": "Hello Carlos! Rome is a great choice for history. We can plan visits to the Colosseum and Roman Forum."
+    },
+    {
+      "owner": "user",
+      "content": "That sounds good. One very important thing: I am a vegetarian, but I also have a *severe nut allergy*. All recommendations must be free from peanuts, almonds, etc."
+    },
+    {
+      "owner": "agent",
+      "content": "Understood. A severe nut allergy is a top priority. I will ensure all food and restaurant recommendations are strictly nut-free. This is noted for your trip."
+    },
+    {
+      "owner": "user",
+      "content": "Great. I also want to find a good cooking class."
+    },
+    {
+      "owner": "agent",
+      "content": "Okay, a vegetarian *and* nut-free cooking class in Rome. I can look into that for you. I've saved these preferences."
+    }
+  ],
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, I'm back. Can you recommend a highly-rated restaurant in Rome for dinner tonight?"
+    }
+  ],
+  "expected": {
+    "task_goal": "Recommend a highly-rated restaurant in Rome.",
+    "use_tools": [],
+    "Personalize": "The recommendation *must* be explicitly vetted as 'nut-free' and 'vegetarian', based on the severe allergy and dietary information provided in the `previous_conversation`."
+  }
+}

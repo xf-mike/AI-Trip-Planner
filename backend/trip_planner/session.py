@@ -32,6 +32,7 @@ class Session:
                  root: str = "./eval_runs",
                  verbose=False):
 
+        self.background_info = background_info
         self.root = root
         os.makedirs(os.path.join(root, "sessions"), exist_ok=True)
 
@@ -109,6 +110,48 @@ class Session:
 
     def get_history(self) -> List[Dict[str, Any]]:
         return [asdict(r) for r in self.history]
+
+    # ------------------------------------------------------------------
+
+    def empty_session(self, use_ltm: bool = True) -> None:
+        """
+        Clears the current session's history (RAM and disk).
+        Optionally resets the long-term memory (LTM).
+
+        Params:
+            use_ltm (bool):
+            - True (default): Keeps the LTM. Clears chat history only.
+            - False: Resets the LTM. Clears both chat history and LTM,
+                     then re-initializes the LTM with the background_info.
+        """
+        # 1. Clear chat history (in-RAM)
+        self.history = []
+        
+        # 2. Clear chat history (on-disk)
+        try:
+            if os.path.exists(self.history_path):
+                os.remove(self.history_path)
+        except OSError as e:
+            print(f"[WARN] Could not remove history file {self.history_path}: {e}")
+
+        # 3. Handle Long-Term Memory (LTM)
+        if not use_ltm:
+            # Reset LTM: delete file, re-init object, re-add background_info
+            try:
+                if os.path.exists(self.mem_path):
+                    os.remove(self.mem_path)
+            except OSError as e:
+                print(f"[WARN] Could not remove memory file {self.mem_path}: {e}")
+            
+            # Re-instantiate the memory object (clears in-RAM store)
+            self.mem = SimpleMemory(self.mem_path)
+            
+            # Re-add background info, mimicking __init__ logic
+            if self.background_info:
+                self.mem.remember(self.background_info, kind="profile", meta={"mem_index": 0})
+        
+        # If use_ltm is True, we do nothing to self.mem or self.mem_path.
+        # The LTM persists, but the chat history is gone.
 
     # ------------------------------------------------------------------
 

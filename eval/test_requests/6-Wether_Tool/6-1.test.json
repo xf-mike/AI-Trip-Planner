@@ -1,0 +1,24 @@
+{
+  "background_info": "user_name: Leo, user_description: In New York City for the weekend.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "I want to do something outdoors in NYC tomorrow."
+    },
+    {
+      "owner": "agent",
+      "content": "Okay, outdoor activities are great! To give you the best suggestion (like Central Park vs. a museum), I should probably check the weather for you first. What's the forecast for tomorrow?"
+    },
+    {
+      "owner": "user",
+      "content": "Oh, smart. Yes, please check the weather for New York City for tomorrow, Saturday."
+    }
+  ],
+  "expected": {
+    "task_goal": "Find the weather forecast for New York City for the next day (Saturday).",
+    "use_tools": [
+      "weather_lookup"
+    ],
+    "Personalize": "N/A"
+  }
+}

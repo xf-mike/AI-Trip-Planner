@@ -1,0 +1,16 @@
+{
+  "background_info": "user_name: Chris, user_description: A tech enthusiast.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hey, I was just reading about that new AI model that was announced last week. What was the name of the company that released 'Chroma-7B'?"
+    }
+  ],
+  "expected": {
+    "task_goal": "Find the name of the company that recently released an AI model named 'Chroma-7B'.",
+    "use_tools": [
+      "web_search"
+    ],
+    "Personalize": "N/A"
+  }
+}

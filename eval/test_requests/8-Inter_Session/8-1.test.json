@@ -1,0 +1,60 @@
+{
+  "background_info": "user_name: Chloe, user_description: Enjoys modern art and boutique shopping.",
+  "previous_conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, I'm planning a 5-day trip to New York City."
+    },
+    {
+      "owner": "agent",
+      "content": "Hello Chloe! NYC is perfect for modern art and shopping. We should plan a visit to the MoMA and explore SoHo."
+    },
+    {
+      "owner": "user",
+      "content": "Sounds good. I'll be staying with a friend in Brooklyn, so any recommendations near there would be great too."
+    },
+    {
+      "owner": "agent",
+      "content": "Okay, Brooklyn-focused. We can look at the Bushwick Collective for street art and shopping in Williamsburg. I'll note your preference for staying in Brooklyn."
+    },
+    {
+      "owner": "user",
+      "content": "I also heard about a specific small gallery, I think it was called 'The Agora Gallery' in Chelsea? Is it any good?"
+    },
+    {
+      "owner": "agent",
+      "content": "The Agora Gallery in Chelsea is known for its diverse collection of contemporary art. It fits your interests well. We can add it to a potential Manhattan day."
+    },
+    {
+      "owner": "user",
+      "content": "Perfect. Also, my budget is pretty flexible, I'm happy to splurge on one really high-end dinner. But I *hate* seafood."
+    },
+    {
+      "owner": "agent",
+      "content": "Noted: 'Flexible budget' for a high-end, non-seafood dinner. We can find a great spot. So, to summarize: 5 days, Brooklyn-based, MoMA, SoHo, Agora Gallery, and a high-end, non-seafood dinner."
+    },
+    {
+      "owner": "user",
+      "content": "Yes, that's everything. I have to go, let's pause here."
+    },
+    {
+      "owner": "agent",
+      "content": "Sounds good. Your plan is saved."
+    }
+  ],
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, me again. I'm ready to continue planning my Manhattan day."
+    },
+    {
+      "owner": "user",
+      "content": "I'm looking at my schedule... what was that small art gallery in Chelsea we talked about? I forgot the name."
+    }
+  ],
+  "expected": {
+    "task_goal": "Remind the user of the name of the specific gallery in Chelsea they previously discussed.",
+    "use_tools": [],
+    "Personalize": "The agent must recall the *specific name* 'The Agora Gallery' which was mentioned by the user in the `previous_conversation`."
+  }
+}

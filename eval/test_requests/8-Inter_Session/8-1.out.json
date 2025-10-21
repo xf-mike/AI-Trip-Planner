@@ -1,0 +1,15 @@
+{
+  "response": {
+    "mem_index": 1,
+    "owner": "agent",
+    "content": "The small art gallery we discussed in Chelsea is called the Agora Gallery.",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": true,
+    "memory_injected": [
+      5
+    ],
+    "use_tools": []
+  },
+  "evaluate": {}
+}
