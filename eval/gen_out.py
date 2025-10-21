@@ -32,6 +32,17 @@ def process_test_file(test_file_path: Path):
     Loads a standard .test.json file, runs the conversation,
     and saves the agent's final response to a .out.json file.
     """
+    # --- NEW: SKIP LOGIC ---
+    # 1. Determine output path
+    new_name = test_file_path.name.replace(".test.json", ".out.json")
+    output_file_path = test_file_path.with_name(new_name)
+    
+    # 2. Check if output file already exists
+    if output_file_path.exists():
+        print(f"  [SKIP] Output already exists: {output_file_path.name}")
+        return
+    # --- END: SKIP LOGIC ---
+
     print(f"  Processing: {test_file_path.name}")
 
     # 1. Load the test case
@@ -65,7 +76,7 @@ def process_test_file(test_file_path: Path):
             print(f"    [WARN] Last turn in {test_file_path.name} is not 'user'. Skipping chat.")
             return
 
-        # # 5. Get the agent's response data from history
+        # 5. Get the agent's response data from history
         # We set store_to_cache=True so the user/agent turns from this 'chat'
         # call are added to the history, allowing get_history()[-1] to work.
         agent_response = sess.chat(
@@ -82,16 +93,19 @@ def process_test_file(test_file_path: Path):
             "evaluate": {} # Placeholder for the judger
         }
 
-        # 7. Write to the .out.json file
-        new_name = test_file_path.name.replace(".test.json", ".out.json")
-        output_file_path = test_file_path.with_name(new_name)
+        # 7. Write to the .out.json file (path already calculated above)
         with open(output_file_path, 'w', encoding='utf-8') as f:
             json.dump(output_data, f, indent=2, ensure_ascii=False)
         
         print(f"    -> Saved: {output_file_path.name}")
 
     except Exception as e:
-        print(f"    [ERROR] Unhandled exception while processing {test_file_path.name}: {e}")
+        # Check if the error is the recursion limit
+        if "Recursion limit" in str(e):
+            print(f"    [ERROR] Recursion limit reached. Agent may be in a loop.")
+            print(f"            Error details: {e}")
+        else:
+            print(f"    [ERROR] Unhandled exception while processing {test_file_path.name}: {e}")
 
 
 def process_inter_session_test_file(test_file_path: Path):
@@ -99,6 +113,17 @@ def process_inter_session_test_file(test_file_path: Path):
     Loads an inter-session .test.json file (with 'previous_conversation'),
     runs both sessions, and saves the final response.
     """
+    # --- NEW: SKIP LOGIC ---
+    # 1. Determine output path
+    new_name = test_file_path.name.replace(".test.json", ".out.json")
+    output_file_path = test_file_path.with_name(new_name)
+    
+    # 2. Check if output file already exists
+    if output_file_path.exists():
+        print(f"  [SKIP] Output already exists: {output_file_path.name}")
+        return
+    # --- END: SKIP LOGIC ---
+
     print(f"  Processing Inter-Session: {test_file_path.name}")
 
     # 1. Load the test case
@@ -162,16 +187,18 @@ def process_inter_session_test_file(test_file_path: Path):
             "evaluate": {} # Placeholder for the judger
         }
 
-        # 7. Write to the .out.json file
-        new_name = test_file_path.name.replace(".test.json", ".out.json")
-        output_file_path = test_file_path.with_name(new_name)
+        # 7. Write to the .out.json file (path already calculated above)
         with open(output_file_path, 'w', encoding='utf-8') as f:
             json.dump(output_data, f, indent=2, ensure_ascii=False)
         
         print(f"    -> Saved: {output_file_path.name}")
 
     except Exception as e:
-        print(f"    [ERROR] Unhandled exception while processing {test_file_path.name}: {e}")
+        if "Recursion limit" in str(e):
+            print(f"    [ERROR] Recursion limit reached. Agent may be in a loop.")
+            print(f"            Error details: {e}")
+        else:
+            print(f"    [ERROR] Unhandled exception while processing {test_file_path.name}: {e}")
 
 
 def main():
