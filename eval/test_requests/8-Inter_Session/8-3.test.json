@@ -1,0 +1,20 @@
+{
+  "background_info": "user_name: Samantha, user_description: The Luxury Business Traveler. A follow-up a week after noting a dislike of cold weather.",
+  "previous_conversation": [
+    { "owner": "user", "content": "I absolutely hate the cold." },
+    { "owner": "agent", "content": "Understood. I'll keep your dislike of cold in mind for future planning." }
+  ],
+  "conversation": [
+    { "owner": "user", "content": "I need to book a 2-day business trip for next month. My meeting can be in either Chicago or Miami." },
+    { "owner": "agent", "content": "I can certainly help with that. I recall you mentioned you dislike cold weather. November in Chicago will be quite chilly, while Miami will be warm and pleasant. Would you prefer I look for flights and 5-star hotels in Miami?" },
+    { "owner": "user", "content": "Yes, that's perfect. Please proceed with Miami." },
+    { "owner": "agent", "content": "Searching for flights and hotels in Miami..."}
+  ],
+  "expected": {
+    "task_goal": "Leverage prior preference (dislikes cold) to steer destination choice and proceed with bookings.",
+    "use_tools": ["search_flights", "search_accommodations"],
+    "Personalize": "Proactively reference the user's cold aversion from previous conversation."
+  }
+}
+
+
