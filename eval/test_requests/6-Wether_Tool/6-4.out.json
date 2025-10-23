@@ -1,0 +1,18 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "Tomorrow morning in Denver, expect light drizzle with temperatures ranging from 7.1°C to 16.4°C. If you're concerned about the weather, it might be wise to delay your ride.",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": false,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "Weather in Denver (United States) on 2025-10-24: light drizzle, min 7.1°C / max 16.4°C, precip 0.4mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

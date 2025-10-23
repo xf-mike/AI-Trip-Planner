@@ -5,11 +5,8 @@
     "content": "For your first evening in Chicago, I recommend starting in the **River North** neighborhood. This area is known for its stunning architecture, art galleries, and a relaxed atmosphere. Here are a few highlights:\n\n1. **Architecture River Cruise**: If you arrive early enough, consider taking a sunset cruise to see the city's iconic buildings from the water.\n\n2. **Walk along the Chicago Riverwalk**: This scenic pathway offers beautiful views of the skyline and is perfect for a leisurely stroll.\n\n3. **Dinner at a Riverside Restaurant**: Enjoy a meal at one of the many restaurants along the river, such as **The Smith** or **Shaw's Crab House**, which offer great views and a relaxed ambiance.\n\n4. **Visit the Merchandise Mart**: If you're interested in design, this historic building is home to showrooms and has a fascinating architectural history.\n\nThis combination will give you a great introduction to Chicago's architectural beauty while maintaining a relaxed vibe.",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      1,
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

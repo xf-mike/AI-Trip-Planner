@@ -1,0 +1,26 @@
+{
+  "response": {
+    "mem_index": 1,
+    "owner": "agent",
+    "content": "It seems I couldn't find the specific name of the specialty coffee place near the Pantheon. However, popular options in that area include \"Sant'Eustachio Il Caffè\" and \"Tazza d'Oro.\" You might want to check those out!",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": false,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: specialty coffee near the Pantheon Rome. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: best coffee near the Pantheon Rome. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: specialty coffee shops near the Pantheon in Rome. Try rephrasing or a more specific query."
+      }
+    ]
+  },
+  "evaluate": {}
+}

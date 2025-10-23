@@ -5,12 +5,8 @@
     "content": "The weather in Seattle this Saturday is expected to be drizzly, with temperatures ranging from 7°C to 15°C. \n\n### Suggested Activity:\n**Seattle Aquarium** - It's engaging for kids and offers interactive exhibits that allow them to learn about marine life.\n\n### Suggested Dinner Place:\n**The Pink Door** - A family-friendly restaurant with a casual atmosphere, known for its delicious Italian cuisine and welcoming vibe for children.\n\nMake sure to check for any reservations or specific kid-friendly menu options!",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      3,
-      1,
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": [
       {
         "name": "weather_tool",

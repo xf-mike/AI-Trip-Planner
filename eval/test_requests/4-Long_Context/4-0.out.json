@@ -5,11 +5,8 @@
     "content": "Here's a proposed 14-day itinerary that balances your interests in Tokyo, Kyoto, and Hokkaido while accommodating your strict vegetarian diet:\n\n### Day 1-5: Tokyo\n- **Day 1:** Arrive in Tokyo. Settle in and explore local vegetarian restaurants.\n- **Day 2:** Visit Ghibli Museum (book tickets in advance) and explore Mitaka. Dinner in Nakano (check for vegetarian options).\n- **Day 3:** Full day in Akihabara (anime shops, cafes). Lunch at a vegetarian-friendly café.\n- **Day 4:** Explore Shibuya and Harajuku. Visit Meiji Shrine. Dinner at a vegetarian restaurant in Shinjuku.\n- **Day 5:** Day trip to Nikko or Kamakura (both have temples and nature). Ensure vegetarian meal options.\n\n### Day 6-7: Hokkaido (Sapporo)\n- **Day 6:** Travel to Sapporo via flight (about 1.5 hours). Explore Sapporo, visit parks, and find vegetarian dining.\n- **Day 7:** Day trip to Otaru (can visit the canal and glass workshops). Look for vegetarian-friendly eateries.\n\n### Day 8-14: Kyoto\n- **Day 8:** Fly back to Tokyo, then take the Shinkansen to Kyoto. Settle in and explore local vegetarian options.\n- **Day 9:** Visit Fushimi Inari Shrine (early morning). Afternoon in Gion district.\n- **Day 10:** Explore Arashiyama (bamboo grove, monkey park). Lunch at a vegetarian restaurant.\n- **Day 11:** Day trip to Nara (Todai-ji Temple, Nara Park). Ensure vegetarian meal options.\n- **Day 12:** Visit Kinkaku-ji (Golden Pavilion) and Ryoan-ji. Dinner at a vegetarian restaurant.\n- **Day 13:** Explore Kyoto’s markets and shops. Visit any remaining temples or shrines.\n- **Day 14:** Depart from Kyoto or return to Tokyo for your flight home.\n\n### Considerations:\n- **Travel:** Flights to Hokkaido are necessary; consider booking in advance for better prices.\n- **Vegetarian Dining:** Research and list vegetarian restaurants in each city to ensure you have options.\n- **Sacrifices:** You may need to skip some attractions in Hokkaido or limit your time there to fit everything in.\n\nThis itinerary allows you to experience the highlights of each location while accommodating your dietary needs.",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      13,
-      17
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

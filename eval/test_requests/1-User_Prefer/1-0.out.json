@@ -5,11 +5,8 @@
     "content": "For your first evening in Chicago, I recommend starting in the **West Loop** neighborhood. It's known for its vibrant food scene, trendy restaurants, and lively atmosphere. Here are a few highlights:\n\n1. **Restaurant Row**: This area on Randolph Street is packed with acclaimed eateries. Consider trying:\n   - **Girl & The Goat**: A must-visit for innovative small plates.\n   - **Au Cheval**: Famous for its burgers and brunch.\n\n2. **Cocktail Bars**: After dinner, check out some craft cocktail bars like:\n   - **The Aviary**: A high-end cocktail experience.\n   - **The Office**: A speakeasy-style bar with a unique vibe.\n\n3. **Atmosphere**: The West Loop has a bustling energy, especially on weekends, with plenty of people out enjoying the nightlife.\n\nThis area will give you a great feel for Chicago's modern culinary scene and vibrant nightlife!",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      1,
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

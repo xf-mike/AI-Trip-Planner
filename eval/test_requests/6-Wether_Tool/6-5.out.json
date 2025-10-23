@@ -5,11 +5,8 @@
     "content": "Tomorrow (Thursday) in New York City is expected to be partly cloudy with temperatures ranging from 46°F to 59°F. The chance of rain is quite low (around 10%), so you should be good to go for outdoor activities! What kind of outdoor activity were you thinking of doing?",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      1,
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": [
       {
         "name": "weather_tool",

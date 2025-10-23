@@ -5,10 +5,8 @@
     "content": "Fitting the Tongariro Alpine Crossing into a 10-day itinerary focused primarily on the South Island is possible, but it will require careful planning. Here’s a suggested approach:\n\n1. **Allocate Days**: Spend about 7-8 days on the South Island and 2-3 days on the North Island. This allows you to enjoy the highlights of both regions without feeling too rushed.\n\n2. **Travel Logistics**: \n   - Fly into Christchurch (South Island) and spend your first days exploring the Southern Alps and nearby national parks.\n   - After your South Island adventures, take a domestic flight from Christchurch to Taupo or Rotorua to access the Tongariro Alpine Crossing.\n\n3. **Tongariro Alpine Crossing**: Plan to do the hike on a day when the weather is favorable. This hike typically takes 6-8 hours, so ensure you have a full day dedicated to it.\n\n4. **Return to South Island**: After the hike, you can fly back to the South Island for any remaining activities.\n\nThis itinerary allows you to experience the best of both islands while still enjoying the in-depth hikes on the South Island. Just be mindful of travel times and weather conditions.",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      1
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

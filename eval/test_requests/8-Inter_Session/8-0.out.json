@@ -1,0 +1,30 @@
+{
+  "response": {
+    "mem_index": 0,
+    "owner": "agent",
+    "content": "I couldn't find specific restaurant recommendations at the moment. However, here are a few highly-rated restaurants in Rome that are popular for dinner:\n\n1. **La Pergola** - A Michelin-starred restaurant known for its exquisite Italian cuisine and stunning views.\n2. **Roscioli** - A deli and restaurant offering traditional Roman dishes with a modern twist.\n3. **Trattoria Da Enzo al 29** - A cozy spot in Trastevere famous for its authentic Roman pasta dishes.\n4. **Il Pagliaccio** - Another Michelin-starred option, offering a creative tasting menu.\n\nIt's advisable to check availability and make a reservation if possible. Enjoy your dinner!",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": false,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: highly-rated restaurants in Rome for dinner. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: best dinner restaurants in Rome 2023. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: top rated restaurants in Rome for dinner. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: popular restaurants in Rome for dinner. Try rephrasing or a more specific query."
+      }
+    ]
+  },
+  "evaluate": {}
+}

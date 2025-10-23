@@ -4,6 +4,9 @@ import json
 from pathlib import Path
 import logging
 
+# Test Phase 1 scenario
+USE_LTM = False
+
 # --- Path Setup ---
 # 1. Get the directory of this script (run_eval.py), which is /.../eval/
 script_dir = Path(__file__).parent
@@ -65,16 +68,16 @@ def process_test_file(test_file_path: Path):
         # 2. Initialize a fresh session
         sess = Session(background_info=background)
 
+        if conversation[-1].get("owner") != "user":
+            print(f"    [WARN] Last turn in {test_file_path.name} is not 'user'. Ignore it.")
+            conversation.pop(-1)
+
         # 3. Replay history (all turns except the last user message)
         for turn in conversation[:-1]:
             sess.append_message(content=turn["content"], owner=turn["owner"])
 
         # 4. Get the final user request and run chat
         final_user_request = conversation[-1]["content"]
-        
-        if conversation[-1].get("owner") != "user":
-            print(f"    [WARN] Last turn in {test_file_path.name} is not 'user'. Skipping chat.")
-            return
 
         # 5. Get the agent's response data from history
         # We set store_to_cache=True so the user/agent turns from this 'chat'
@@ -82,7 +85,7 @@ def process_test_file(test_file_path: Path):
         agent_response = sess.chat(
             user_request=final_user_request,
             context_size=DEFAULT_CONTEXT_SIZE,
-            use_ltm=True,
+            use_ltm=USE_LTM,
             store_to_cache=True, # <-- Set to True
             verbose=False
         )
@@ -156,27 +159,27 @@ def process_inter_session_test_file(test_file_path: Path):
 
         # --- PHASE 2: Start "New" Session, keeping LTM ---
         # This clears chat history but keeps the LTM file
-        sess.empty_session(use_ltm=True)
+        sess.empty_session(use_ltm=USE_LTM)
         print(f"    - Phase 2 (empty_session) complete. LTM kept.")
 
         # --- PHASE 3: Run "New" Conversation ---
         # Replay history (all turns except the last user message)
+        if new_conversation[-1].get("owner") != "user":
+            print(f"    [WARN] Last turn in {test_file_path.name} is not 'user'. Ignore it.")
+            new_conversation.pop(-1)
+
         for turn in new_conversation[:-1]:
             sess.append_message(content=turn["content"], owner=turn["owner"])
 
         # Get the final user request and run chat
         final_user_request = new_conversation[-1]["content"]
-        
-        if new_conversation[-1].get("owner") != "user":
-            print(f"    [WARN] Last turn in 'conversation' is not 'user'. Skipping chat.")
-            return
 
         # 5. Get the agent's response data from history
         # We set store_to_cache=True to persist this final turn
         agent_response = sess.chat(
             user_request=final_user_request,
             context_size=DEFAULT_CONTEXT_SIZE,
-            use_ltm=True,
+            use_ltm=USE_LTM,
             store_to_cache=True, # <-- Set to True
             verbose=False
         )

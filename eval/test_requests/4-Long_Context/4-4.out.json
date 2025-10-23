@@ -1,8 +1,8 @@
 {
   "response": {
-    "mem_index": 1,
+    "mem_index": 10,
     "owner": "agent",
-    "content": "The small art gallery we discussed in Chelsea is called the Agora Gallery.",
+    "content": "Please provide me with the city and the dates for which you would like to check the weather.",
     "gen_by_engine": true,
     "context_size": 10,
     "use_ltm": false,

@@ -1,0 +1,22 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "The weather in San Diego today is overcast, with a minimum temperature of 15.1°C and a maximum of 22.2°C. There is no expected precipitation.",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": false,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "[weather] Forecast fetch failed for San Diego."
+      },
+      {
+        "name": "weather_tool",
+        "output": "Weather in San Diego (United States) on 2025-10-23: overcast, min 15.1°C / max 22.2°C, precip 0.0mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

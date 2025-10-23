@@ -5,11 +5,8 @@
     "content": "Here are some neighborhoods in Berlin that would be a great fit for your criteria of safety, quietness, and unique design:\n\n1. **Prenzlauer Berg**:\n   - **Why it's a good fit**: This area is known for its charming streets, beautiful architecture, and a relaxed atmosphere. It's filled with small galleries, cafes, and boutiques. Prenzlauer Berg is generally safe and has a community feel, making it ideal for introverts. You can explore local art spaces like the Kunsthaus Tacheles.\n\n2. **Friedrichshain**:\n   - **Why it's a good fit**: Friedrichshain is vibrant yet has quieter pockets, especially away from the main tourist areas. It's famous for its street art and the East Side Gallery. The neighborhood has a mix of modern and historic architecture, and you can find unique accommodations that reflect the local art scene.\n\n3. **Kreuzberg**:\n   - **Why it's a good fit**: Known for its diverse culture and artistic vibe, Kreuzberg has many small galleries and creative spaces. While some areas can be busy, you can find quieter streets and parks. The neighborhood is also home to unique design hotels and guesthouses that prioritize aesthetics and comfort.\n\n4. **Charlottenburg**:\n   - **Why it's a good fit**: This area is more upscale and quieter, with beautiful architecture and green spaces. It's safe and has a more relaxed vibe compared to the bustling city center. You can find boutique hotels with a focus on design and comfort, along with access to smaller galleries and art spaces.\n\n5. **Schöneberg**:\n   - **Why it's a good fit**: Schöneberg is a quieter, residential area with a mix of cultures and artistic influences. It's safe and has a laid-back atmosphere. The neighborhood features unique cafes and smaller galleries, making it a great place to unwind and explore local art.\n\nEach of these neighborhoods offers a unique blend of safety, quietness, and artistic inspiration, making them ideal for your stay in Berlin. Would you like me to find specific accommodation options in any of these areas?",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      1,
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

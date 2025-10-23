@@ -5,12 +5,8 @@
     "content": "The weather in Seattle this Saturday is expected to be drizzly, with temperatures ranging from 7°C to 15°C. \n\n**Activity Suggestion:** Visit the **Seattle Art Museum**, which features a diverse collection of art and is located in downtown Seattle.\n\n**Dinner Suggestion:** Consider dining at **Canlis**, a renowned fine dining restaurant known for its exquisite cuisine and stunning views. \n\nMake sure to check for reservations, as both places can be quite popular!",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      3,
-      1,
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": [
       {
         "name": "weather_tool",

@@ -5,11 +5,8 @@
     "content": "I couldn't find specific information about transit strikes or closures in Paris for this upcoming weekend. I recommend checking local news sources or the official RATP (Paris public transport) website closer to your travel date for the most accurate updates.",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      1,
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": [
       {
         "name": "search_tool",

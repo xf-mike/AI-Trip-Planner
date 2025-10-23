@@ -1,0 +1,18 @@
+{
+  "response": {
+    "mem_index": 0,
+    "owner": "agent",
+    "content": "Tomorrow in San Diego, the weather will be clear with a minimum temperature of 13.6°C and a maximum of 25.4°C. No precipitation is expected.",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": false,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "Weather in San Diego (United States) on 2025-10-24: clear, min 13.6°C / max 25.4°C, precip 0.0mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

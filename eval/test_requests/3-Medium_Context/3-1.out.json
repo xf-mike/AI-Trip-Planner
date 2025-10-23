@@ -5,13 +5,8 @@
     "content": "Swapping Florence for Cinque Terre is a fantastic choice! Here's how the trip would look:\n\n### Itinerary Overview:\n- **Days in Rome**: 5 days (including the day trip to Ostia Antica)\n- **Days in Cinque Terre**: 5 days\n\n### Key Changes:\n1. **Travel**: \n   - From Rome to Cinque Terre, you'll take a train, which takes about 3-4 hours. \n   - Ensure to book your train tickets in advance for the best prices.\n\n2. **Cinque Terre Activities**:\n   - Focus on hiking between the villages (easy to moderate trails).\n   - Enjoy the stunning coastal views and explore local markets.\n   - Look for vegetarian-friendly restaurants that offer local specialties like pesto, focaccia, and fresh vegetables.\n\n3. **Food Tours**:\n   - I can find vegetarian-friendly food tours or cooking classes in Cinque Terre that highlight local cuisine.\n\n4. **Pace**: \n   - The pace will remain relaxing, with plenty of time to enjoy the scenery, beaches, and local culture.\n\nWould you like me to find specific vegetarian food tours or activities in Cinque Terre?",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      5,
-      9,
-      3,
-      1
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

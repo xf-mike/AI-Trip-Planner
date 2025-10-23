@@ -5,10 +5,8 @@
     "content": "Including both **Tokyo** and **Hokkaido** in a 10-day Japan itinerary is definitely possible, but you’ll need to plan carefully to balance city exploration and ski time. Here’s how you could structure it:\n\n1. **Allocate Days**: Spend about 4 days in Tokyo and 6 days in Hokkaido. This gives you enough time for both urban culture and winter adventure.\n\n2. **Travel Logistics**:\n   - Fly into Tokyo and explore the city’s highlights — neighborhoods like Shibuya, Asakusa, and Akihabara — for your first few days.\n   - Take a domestic flight (about 1.5 hours) from Tokyo Haneda to New Chitose Airport (near Sapporo). From there, reach ski resorts like Niseko or Furano by shuttle or train.\n\n3. **Hokkaido Ski Experience**: Dedicate at least 3–4 full days to skiing or snowboarding. Niseko offers world-famous powder snow, great accommodations, and relaxing onsens for recovery.\n\n4. **Return Travel**: You can fly back from New Chitose to Tokyo the evening before your departure or connect directly through Tokyo for your international flight.\n\nThis plan lets you enjoy Tokyo’s urban energy and Hokkaido’s snowy landscapes without feeling too rushed — just make sure to book domestic flights and transfers early during peak ski season.",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      1
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

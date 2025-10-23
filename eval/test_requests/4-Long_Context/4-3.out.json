@@ -1,0 +1,30 @@
+{
+  "response": {
+    "mem_index": 8,
+    "owner": "agent",
+    "content": "I couldn't find specific information on top-rated hostels in Ho Chi Minh City. However, I recommend checking popular travel websites like Hostelworld, Booking.com, or TripAdvisor for the latest reviews and ratings on hostels in the area. You can filter by ratings, price, and amenities to find the best options for your stay.",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": false,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: top-rated hostels in Ho Chi Minh City. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: best hostels Ho Chi Minh City 2023. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: popular hostels in Ho Chi Minh City. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: recommended hostels Ho Chi Minh City. Try rephrasing or a more specific query."
+      }
+    ]
+  },
+  "evaluate": {}
+}

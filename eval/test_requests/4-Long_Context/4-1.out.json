@@ -5,10 +5,8 @@
     "content": "Here's your final 3-week itinerary, considering your budget, crowd preferences, street food, and your friend's diabetes:\n\n### Week 1: Hanoi\n- **Days 1-3:** Explore Hanoi\n  - Visit Hoan Kiem Lake, Old Quarter, and museums.\n  - Enjoy street food (pho, banh mi) with options for low-sugar dishes.\n- **Days 4-5:** Halong Bay\n  - Overnight cruise with activities like kayaking and swimming.\n  - Ensure meals accommodate your friend's dietary needs.\n- **Day 6:** Return to Hanoi\n  - Relax and explore more of the city.\n- **Day 7:** Travel to Hue (train or bus).\n\n### Week 2: Hue and Bach Ma National Park\n- **Days 8-10:** Hue\n  - Visit the Imperial City, Thien Mu Pagoda, and local markets.\n  - Enjoy street food while being mindful of sugar content.\n- **Day 11:** Bach Ma National Park\n  - Day trip for moderate hiking; enjoy nature and scenic views.\n- **Days 12-13:** Relax in Hue\n  - Explore more local attractions and enjoy the food scene.\n- **Day 14:** Travel to Hoi An (bus).\n\n### Week 3: Hoi An and Da Nang\n- **Days 15-17:** Hoi An\n  - Explore the ancient town, rice paddies, and beaches.\n  - Participate in a cooking class focusing on healthy, low-sugar dishes.\n- **Days 18-19:** Da Nang\n  - Visit Marble Mountains and My Khe Beach.\n  - Enjoy street food and local cuisine with dietary considerations.\n- **Day 20:** Return to Hanoi (flight or train).\n- **Day 21:** Departure from Hanoi.\n\n### Additional Considerations:\n- **Accommodation:** Look for places with fridge access for managing food.\n- **Transportation:** Use trains and buses for budget-friendly travel.\n- **Health:** Keep snacks on hand for your friend and choose restaurants with healthy options.\n\nThis plan balances sightseeing, cultural experiences, and dietary needs while keeping the trip enjoyable and manageable.",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      17
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": []
   },
   "evaluate": {}

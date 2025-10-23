@@ -5,10 +5,8 @@
     "content": "I couldn't retrieve the weather forecast for Boston this coming Friday, October 27, 2023. However, I recommend checking a reliable weather website or app closer to your departure date for the most accurate information. If it's typically chilly this time of year, it might be wise to pack a heavy coat just in case.",
     "gen_by_engine": true,
     "context_size": 10,
-    "use_ltm": true,
-    "memory_injected": [
-      0
-    ],
+    "use_ltm": false,
+    "memory_injected": [],
     "use_tools": [
       {
         "name": "weather_tool",
