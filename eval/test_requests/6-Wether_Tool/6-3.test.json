@@ -1,0 +1,14 @@
+{
+  "background_info": "user_name: Maria & Leo, user_description: The Adventurous Couple. Wants to compare weekend weather.",
+  "conversation": [
+    { "owner": "user", "content": "What's warmer this weekend, Miami or Cancun?" },
+    { "owner": "agent", "content": "Let me check. This weekend, Miami is forecast to be around 28°C (82°F), while Cancun will be slightly warmer at 30°C (86°F)." }
+  ],
+  "expected": {
+    "task_goal": "Compare and report weekend temperatures for Miami and Cancun.",
+    "use_tools": ["get_weather_forecast"],
+    "Personalize": "N/A"
+  }
+}
+
+
