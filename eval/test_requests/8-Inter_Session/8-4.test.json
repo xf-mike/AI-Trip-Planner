@@ -1,0 +1,52 @@
+{
+  "background_info": "user_name: Liam, user_description: Enjoys historical architecture, early-morning walks, and specialty coffee; gluten-free diet.",
+  "previous_conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, I'm planning a 4-day trip to Rome."
+    },
+    {
+      "owner": "agent",
+      "content": "Hello Liam! Rome is perfect for historical architecture and early starts. We can plan morning visits to avoid crowds."
+    },
+    {
+      "owner": "user",
+      "content": "Great. I'll be staying in Trastevere and I'm gluten-free, so I'd love food spots that work for me."
+    },
+    {
+      "owner": "agent",
+      "content": "Noted: Trastevere base and gluten-free preferences. For coffee near the Pantheon, 'Sant'Eustachio Il Caffè' is a classic specialty spot you might enjoy."
+    },
+    {
+      "owner": "user",
+      "content": "That sounds perfect. Also, I'd like to see the Roman Forum early to beat the lines."
+    },
+    {
+      "owner": "agent",
+      "content": "Got it—early Roman Forum visit. I’ll remember your preference for early-morning itineraries and note 'Sant'Eustachio Il Caffè' near the Pantheon."
+    },
+    {
+      "owner": "user",
+      "content": "Thanks! Let's continue planning later."
+    },
+    {
+      "owner": "agent",
+      "content": "Sure thing. Your preferences are saved."
+    }
+  ],
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi again. I'm ready to flesh out the central Rome day."
+    },
+    {
+      "owner": "user",
+      "content": "Quick reminder—what was that specialty coffee place near the Pantheon we talked about? I forgot the name."
+    }
+  ],
+  "expected": {
+    "task_goal": "Remind the user of the name of the specialty coffee shop near the Pantheon mentioned previously.",
+    "use_tools": [],
+    "Personalize": "The agent must recall the specific name 'Sant'Eustachio Il Caffè' from the previous_conversation, reflecting the user's interest in specialty coffee."
+  }
+}

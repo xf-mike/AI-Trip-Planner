@@ -1,0 +1,24 @@
+{
+  "backgound_info": "user_name: Liam, user_description: A cyclist who checks weather closely before planning rides.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hey, can you check if it’s going to rain in Denver tomorrow morning?"
+    },
+    {
+      "owner": "agent",
+      "content": "Sure thing, Liam. Let me check the weather for tomorrow morning in Denver."
+    },
+    {
+      "owner": "user",
+      "content": "Thanks, I need to know if I should delay my ride."
+    }
+  ],
+  "expected": {
+    "task_goal": "Retrieve the weather forecast for tomorrow morning in Denver.",
+    "use_tools": [
+      "weather_lookup"
+    ],
+    "Personalize": "Focus on weather details relevant to cycling, such as precipitation and wind conditions. The response should clearly indicate whether it’s suitable for a morning ride."
+  }
+}

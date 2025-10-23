@@ -1,0 +1,33 @@
+{
+  "backgound_info": "user_name: Olivia, user_description: A foodie traveler who enjoys discovering local markets and traditional dishes.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hey, I want to visit Austin for two days next week."
+    },
+    {
+      "owner": "agent",
+      "content": "Austin is amazing for food lovers! Do you want me to suggest restaurants or activities first?"
+    },
+    {
+      "owner": "user",
+      "content": "Let's start with food, but could you check what the weather is like next Friday first?"
+    },
+    {
+      "owner": "agent",
+      "content": "Got it, checking Austin’s weather for next Friday now. After that, I can suggest local markets or food events."
+    },
+    {
+      "owner": "user",
+      "content": "Perfect, please do!"
+    }
+  ],
+  "expected": {
+    "task_goal": "Check the weather for next Friday in Austin, then recommend one local food-related activity or market visit.",
+    "use_tools": [
+      "weather_lookup",
+      "web_search"
+    ],
+    "Personalize": "Since the user is a foodie traveler, the recommendation should focus on authentic local dishes or markets, not chain restaurants or generic tourist spots."
+  }
+}

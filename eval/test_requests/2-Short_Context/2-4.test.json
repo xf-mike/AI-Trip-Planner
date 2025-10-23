@@ -1,0 +1,25 @@
+{
+  "backgound_info": "user_name: Noah, user_description: A college student looking for spontaneous budget-friendly trips.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Can you help me plan a one-day trip to San Diego this Sunday?"
+    },
+    {
+      "owner": "agent",
+      "content": "Sure, Noah! Let me first check the weather for Sunday before suggesting something fun and affordable."
+    },
+    {
+      "owner": "user",
+      "content": "Sounds good, please do that."
+    }
+  ],
+  "expected": {
+    "task_goal": "Check the weather for Sunday in San Diego, then recommend a one-day budget-friendly activity.",
+    "use_tools": [
+      "weather_lookup",
+      "web_search"
+    ],
+    "Personalize": "Ensure the plan is low-cost and suitable for a college student who enjoys spontaneous short trips."
+  }
+}

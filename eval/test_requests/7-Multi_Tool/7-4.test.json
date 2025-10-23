@@ -1,0 +1,33 @@
+{
+  "backgound_info": "user_name: Ethan, user_description: A family-oriented traveler who plans weekend trips with kids and likes both outdoor and educational activities.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, we’re planning a weekend family trip to Portland."
+    },
+    {
+      "owner": "agent",
+      "content": "That sounds fun, Ethan! Should I check what the weather looks like first before suggesting activities?"
+    },
+    {
+      "owner": "user",
+      "content": "Yes please, check the weather for Saturday and suggest one indoor and one outdoor family-friendly activity depending on that."
+    },
+    {
+      "owner": "agent",
+      "content": "Got it, checking the forecast now."
+    },
+    {
+      "owner": "user",
+      "content": "And make sure it’s something the kids will enjoy!"
+    }
+  ],
+  "expected": {
+    "task_goal": "Check the weather for Saturday in Portland, then recommend one indoor and one outdoor family-friendly activity suitable for kids based on the forecast.",
+    "use_tools": [
+      "weather_lookup",
+      "web_search"
+    ],
+    "Personalize": "Ensure activities are family-appropriate, engaging for children, and reflect the weather conditions (e.g., indoor museum if rainy, outdoor park if sunny). Avoid nightlife or adult-oriented suggestions."
+  }
+}

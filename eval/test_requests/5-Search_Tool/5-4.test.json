@@ -1,0 +1,24 @@
+{
+  "backgound_info": "user_name: Sophia, user_description: A solo traveler who enjoys exploring historical landmarks and learning about local culture.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hi, I’m visiting Boston next week. Can you find me a few historical sites worth visiting?"
+    },
+    {
+      "owner": "agent",
+      "content": "Sure, Sophia! Boston is full of history. Would you like me to focus on colonial-era landmarks or museums too?"
+    },
+    {
+      "owner": "user",
+      "content": "Mostly outdoor landmarks, please. I love walking and learning about the city’s past."
+    }
+  ],
+  "expected": {
+    "task_goal": "Find and recommend several outdoor historical landmarks in Boston suitable for a solo traveler.",
+    "use_tools": [
+      "web_search"
+    ],
+    "Personalize": "Focus on historical outdoor attractions that allow independent exploration. Avoid nightlife or shopping recommendations since the user values culture and learning."
+  }
+}
