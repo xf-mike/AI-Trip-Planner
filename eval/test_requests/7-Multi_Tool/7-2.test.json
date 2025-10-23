@@ -1,0 +1,25 @@
+{
+  "background_info": "user_name: Sofia, user_description: A marine biologist who studies coral reefs and enjoys scuba diving in tropical locations.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "I'm planning a research trip to study coral reefs in the Florida Keys."
+    },
+    {
+      "owner": "agent",
+      "content": "Hello Sofia! The Florida Keys have excellent coral reef systems. As a marine biologist, you'll find great research opportunities there. When are you planning this trip?"
+    },
+    {
+      "owner": "user",
+      "content": "Early February. I want to visit the specific reef that's most famous there, but I can't remember its name. Can you search for information about the main coral reef system in the Florida Keys? And also check the weather and water conditions for early February to see if it's good for diving?"
+    }
+  ],
+  "expected": {
+    "task_goal": "Search for information about the main coral reef system in the Florida Keys (likely Florida Reef or John Pennekamp) and check weather conditions for early February to assess diving suitability.",
+    "use_tools": [
+      "web_search",
+      "weather_lookup"
+    ],
+    "Personalize": "The web_search should focus on identifying the major coral reef system in the Florida Keys with details relevant to a 'marine biologist' (from background_info) such as reef biodiversity and conservation status. The weather_lookup should provide conditions relevant for 'scuba diving' (from background_info) including temperature, visibility factors, and sea conditions. Both tools should work together to help plan the research trip, showing coordinated multi-tool usage."
+  }
+}

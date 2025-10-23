@@ -1,0 +1,25 @@
+{
+  "background_info": "user_name: Marcus, user_description: A history teacher who enjoys educational travel and visiting museums.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "I'm planning a trip to Washington D.C. I want to see the Lincoln Memorial."
+    },
+    {
+      "owner": "agent",
+      "content": "Great choice, Marcus! The Lincoln Memorial is iconic and very meaningful for a history teacher. When are you planning to visit?"
+    },
+    {
+      "owner": "user",
+      "content": "Next weekend. Can you check the weather and also tell me more about its history? I want to share interesting facts with my students."
+    }
+  ],
+  "expected": {
+    "task_goal": "Check the weather for Washington D.C. next weekend and search for historical information about the Lincoln Memorial.",
+    "use_tools": [
+      "weather_lookup",
+      "web_search"
+    ],
+    "Personalize": "The agent must remember that the user specifically mentioned 'Lincoln Memorial' (from 1 turn ago) when conducting both the weather check and Wikipedia search. The historical information should be tailored for 'share with students' purpose (from current turn) and align with 'history teacher' background."
+  }
+}

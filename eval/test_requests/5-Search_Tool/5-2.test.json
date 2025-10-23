@@ -1,0 +1,24 @@
+{
+  "background_info": "user_name: Priya, user_description: An architecture student interested in ancient civilizations and UNESCO World Heritage sites.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "I'm doing a research project on Mayan pyramids and want to visit one in person."
+    },
+    {
+      "owner": "agent",
+      "content": "That sounds like a fascinating project, Priya! There are several impressive Mayan pyramid sites. Do you have a specific one in mind?"
+    },
+    {
+      "owner": "user",
+      "content": "I've heard of Chichen Itza but I don't know much about it. Can you search for information about Chichen Itza? I need to know about its architecture, when it was built, and why it's significant."
+    }
+  ],
+  "expected": {
+    "task_goal": "Search for comprehensive information about Chichen Itza, focusing on its architecture, construction period, and historical significance.",
+    "use_tools": [
+      "web_search"
+    ],
+    "Personalize": "The search results should be presented with emphasis on 'architecture' details (from background_info: architecture student), 'ancient civilizations' context (from background_info), and the specific aspects requested: architectural features, construction timeline, and significance. The response should help inform both the research project and potential visit mentioned."
+  }
+}
