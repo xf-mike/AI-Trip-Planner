@@ -1,0 +1,18 @@
+{
+  "response": {
+    "mem_index": 11,
+    "owner": "agent",
+    "content": "Swapping **Seville** for **San Sebastián** would give your Spain trip a completely different flavor — trading Andalusian charm for coastal elegance. Here’s how the revised plan could look:\n\n### Itinerary Overview:\n- **Days in Madrid**: 5 days (including a day trip to Toledo)\n- **Days in San Sebastián**: 5 days\n\n### Key Changes:\n1. **Travel**:\n   - From Madrid, take a direct train to San Sebastián (around 5 hours) or a short domestic flight. Both options are easy and scenic.\n   - Be sure to book the train in advance if you prefer the ground route — the ride through northern Spain is beautiful.\n\n2. **San Sebastián Highlights**:\n   - Explore the **Old Town (Parte Vieja)**, famous for its pintxo bars — perfect for a foodie like you.\n   - Walk along **La Concha Beach** or hike up **Monte Igueldo** for panoramic views.\n   - Enjoy relaxed evenings at seaside restaurants with fresh seafood and vegetarian-friendly tapas.\n\n3. **Food Experience**:\n   - San Sebastián is one of Europe’s top culinary destinations, home to multiple Michelin-starred restaurants.\n   - Many pintxos are naturally vegetarian — think grilled peppers, tortilla española, and local cheeses.\n\n4. **Pace**:\n   - The overall trip remains slow and immersive, balancing Madrid’s history and art with the Basque coast’s relaxed atmosphere.\n\nWould you like me to shortlist a few specific vegetarian pintxo tours or coastal dining spots in San Sebastián?",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": true,
+    "memory_injected": [
+      4,
+      8,
+      3,
+      1
+    ],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

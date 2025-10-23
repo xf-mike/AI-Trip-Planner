@@ -1,0 +1,16 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "For your first evening in **New York City**, I recommend exploring the **East Village** — it perfectly captures NYC’s creative, energetic spirit with its mix of innovative restaurants, hidden cocktail bars, and local character.\n\n1. **Dinner Options**:\n   - **Momofuku Noodle Bar**: A classic for modern Asian fusion and big city vibes.\n   - **Kiki’s**: Cozy Greek spot with a lively, unpretentious crowd.\n\n2. **Bars & Nightlife**:\n   - **Death & Co.**: One of NYC’s most acclaimed cocktail bars, with expertly crafted drinks.\n   - **Please Don’t Tell (PDT)**: A speakeasy hidden behind a phone booth in a hot dog shop — a true NYC experience.\n\n3. **Vibe**: The East Village has that perfect mix of energy and authenticity — people dining late, music from nearby bars, and endless street life. It’s ideal for feeling New York’s pulse on your very first night.",
+    "gen_by_engine": true,
+    "context_size": 10,
+    "use_ltm": true,
+    "memory_injected": [
+      1,
+      0
+    ],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

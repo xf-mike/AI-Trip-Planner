@@ -1,0 +1,22 @@
+{
+  "background_info": "user_name: Daniel, user_description: A 30-year-old graphic designer visiting NYC for the first time. Loves art, indie music, late-night dining, and discovering creative, local experiences.",
+  "conversation": [
+    {
+      "owner": "user",
+      "content": "Hey! I’m heading to New York for the weekend. It’s my first time there and I want to really feel the city’s energy at night — great food, cool bars, local vibes."
+    },
+    {
+      "owner": "agent",
+      "content": "Welcome, Daniel! New York has so many amazing neighborhoods for that kind of experience — from East Village to Williamsburg to Lower East Side. Would you prefer something more artsy and local, or more upscale and polished for your first evening?"
+    },
+    {
+      "owner": "user",
+      "content": "Definitely more artsy and local. I’d rather skip the tourist traps and go somewhere that feels authentic — good food, music, and people."
+    }
+  ],
+  "expected": {
+    "task_goal": "Recommend a New York neighborhood and several restaurant/bar options that match the user's artistic, local, and vibrant nightlife preferences for their first night.",
+    "use_tools": [],
+    "Personalize": "The recommendation should emphasize authenticity, creativity, late-night food, and indie/local energy (e.g., East Village, Lower East Side, or Williamsburg). Avoid tourist-heavy areas like Times Square or Midtown."
+  }
+}
