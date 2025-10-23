@@ -1,0 +1,14 @@
+{
+  "background_info": "user_name: Samantha, user_description: The Luxury Business Traveler. User is checking weather for a potential trip and expresses a strong dislike of cold.",
+  "conversation": [
+    { "owner": "user", "content": "I have a potential business trip to Chicago next month. I absolutely hate the cold, so what's the weather typically like there in November?" },
+    { "owner": "agent", "content": "In November, Chicago is typically cold, with average temperatures ranging from 3°C to 9°C (37°F to 48°F) and a chance of snow. Given your preference, you'll definitely want to pack a heavy coat." }
+  ],
+  "expected": {
+    "task_goal": "Answer Chicago November weather and acknowledge the user's cold-aversion.",
+    "use_tools": ["get_weather_history"],
+    "Personalize": "Reference the user's dislike of cold when advising."
+  }
+}
+
+

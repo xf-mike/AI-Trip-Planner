@@ -1,0 +1,14 @@
+{
+  "background_info": "user_name: Maria & Leo, user_description: The Adventurous Couple. Assessing hiking suitability and trails.",
+  "conversation": [
+    { "owner": "user", "content": "Is this weekend a good time to go hiking in Yosemite? Find some popular trails." },
+    { "owner": "agent", "content": "The weather in Yosemite this weekend will be sunny with a high of 18°C, which is great for hiking. Popular trails for this time of year include the Mist Trail to Vernal Fall and the Mirror Lake Loop." }
+  ],
+  "expected": {
+    "task_goal": "Combine weather conditions and trail suggestions to answer hiking suitability.",
+    "use_tools": ["get_weather_forecast", "search_activities"],
+    "Personalize": "N/A"
+  }
+}
+
+

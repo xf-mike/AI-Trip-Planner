@@ -1,0 +1,14 @@
+{
+  "background_info": "user_name: Alex, user_description: The Budget Backpacker. A simple, direct question about weather.",
+  "conversation": [
+    { "owner": "user", "content": "What's the weather in San Diego tomorrow?" },
+    { "owner": "agent", "content": "The forecast for San Diego tomorrow is sunny with a high of 22°C (72°F)." }
+  ],
+  "expected": {
+    "task_goal": "Provide a concise weather forecast for San Diego tomorrow.",
+    "use_tools": ["get_weather_forecast"],
+    "Personalize": "N/A"
+  }
+}
+
+

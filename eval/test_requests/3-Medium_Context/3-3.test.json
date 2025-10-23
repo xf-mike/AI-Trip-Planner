@@ -1,0 +1,18 @@
+{
+  "background_info": "user_name: Alex, user_description: The Budget Backpacker. Planning a short, budget-friendly trip to Portland.",
+  "conversation": [
+    { "owner": "user", "content": "I want to plan a 3-day trip to Portland, Oregon, on a tight budget." },
+    { "owner": "agent", "content": "Great! Portland is very budget-friendly. To get started, what dates are you thinking of for your 3-day trip?" },
+    { "owner": "user", "content": "The first weekend of next month. First, check the weather forecast." },
+    { "owner": "agent", "content": "The forecast for that weekend in Portland shows partly cloudy skies with a high of 15°C. It's a good idea to bring a light jacket." },
+    { "owner": "user", "content": "Okay. Now find me a free museum to visit there." },
+    { "owner": "agent", "content": "While most major museums have an admission fee, you could explore the street art and many public art installations around the Alberta Arts District for free." }
+  ],
+  "expected": {
+    "task_goal": "Maintain 'Portland for 3 days' context, use weather then search to propose budget options.",
+    "use_tools": ["get_weather_forecast", "search_activities"],
+    "Personalize": "Tailor suggestions to a budget backpacker."
+  }
+}
+
+
