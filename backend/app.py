@@ -1,5 +1,5 @@
-# production_server.py
-# Dev server + Static frontend hosting
+# app.py
+# Minimal multi-user & multi-session backend + Static frontend hosting
 # Endpoints:
 #   POST /api/create_user                -> { user_id, identity_token }
 #   POST /api/create_session             -> { session_id }
@@ -9,8 +9,9 @@
 #
 # Storage layout (under ./data):
 #   ./data/user_data/<user_id>/user.meta.json
-#   ./data/user_data/<user_id>/memory.jsonl           # long-term memory shared across sessions
+#   ./data/user_data/<user_id>/memory.jsonl    # long-term memory if use SimpleMemory
 #   ./data/user_data/<user_id>/sessions/<session_id>/state.jsonl
+#   [LTM (long-term memory) can be also run above Weaviate DB]
 #
 # Notes:
 # - Identity: client keeps identity_token; server stores only its sha256.
@@ -23,20 +24,15 @@ import os, json, time, uuid, hashlib, logging
 from typing import Any, Dict, List, Optional
 
 from flask import Flask, request, jsonify, Response, send_from_directory
+from flask_cors import CORS
 
 # your project modules
 from trip_planner.orchestrate import make_app
 from trip_planner.tools import TOOLS
 from trip_planner.llm import init_llm
 from trip_planner.role import role_template
-
-# optional memory + context (graceful fallback if missing)
-try:
-    from trip_planner.memory import SimpleMemory, format_mem_snippets
-except Exception:
-    SimpleMemory = None
-    format_mem_snippets = None
-
+from trip_planner.memory import SimpleMemory, format_mem_snippets
+from trip_planner.vectorDB import WeaviateMemory
 try:
     from trip_planner.context import trim_context as _trim_context
 except Exception:
@@ -48,34 +44,57 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, Tool
 # -------------------- config --------------------
 DATA_ROOT = os.environ.get("DATA_ROOT", "./data")
 USE_LTM = os.environ.get("USE_LTM", "1").lower() in {"1", "true", "yes"}
+USE_VEC_DB = USE_LTM and os.environ.get("USE_VEC_DB", "1").lower() in {"1", "true", "yes"}
 VERBOSE = os.environ.get("VERBOSE", "1").lower() in {"1", "true", "yes"}
 MAX_TURNS = int(os.environ.get("MAX_TURNS_IN_CONTEXT", "16"))
 KEEP_SYSTEM = int(os.environ.get("KEEP_SYSTEM", "2"))
+RUN_AS_DEV = os.environ.get("RUN_AS_DEV", "1").lower() in {"1", "true", "yes"}
 
-# Vite build 输出目录
-STATIC_DIR = os.path.join(os.path.dirname(__file__), "dist")
+if RUN_AS_DEV:
+    app = Flask(__name__)
+    CORS(app)
 
-# 让 Flask 直接把 dist 当静态根目录
-app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="/")
+else:
+    # Vite build 输出目录
+    STATIC_DIR = os.path.join(os.path.dirname(__file__), "dist")
 
-# 关闭 werkzeug 自带的访问日志
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)  # 只输出错误日志（不打印普通请求）
+    # 让 Flask 直接把 dist 当静态根目录
+    app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="/")
+
+    # 关闭 werkzeug 自带的访问日志
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)  # 只输出错误日志（不打印普通请求）
+
+
+if USE_VEC_DB:
+    # initialize WeaviateMemory
+    memory_store = None
+    try:
+        # Initialize the client once, globally
+        memory_store = WeaviateMemory(openai_key=os.environ.get("OPENAI_API_KEY"))
+        print("WeaviateMemory initialized successfully.")
+    except Exception as e:
+        print(f"WARNING: Failed to initialize WeaviateMemory client: {e}")
+        print(f"\nUse SimpleMemory instead.")
+        USE_VEC_DB = False # Disable if connection fails
+
 
 # model & orchestrator (stateless)
 _llm = init_llm(TOOLS)
 _invoke = make_app(_llm, TOOLS)
 print(f"Memory: Short{'+Long' if USE_LTM else ''} | Max context scale: {MAX_TURNS}")
+print(f"Running Mode: {'Development' if RUN_AS_DEV else 'Production'}")
 
 # -------------------- Frontend Hosting --------------------
 # 前端路由兜底：不是 /api 的都交给 index.html
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def catch_all(path):
-    # /api/* 由后端处理；其余路径返回前端入口
-    if path.startswith("api/"):
-        return ("Not Found", 404)
-    return send_from_directory(app.static_folder, "index.html")
+if not RUN_AS_DEV:
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def catch_all(path):
+        # /api/* 由后端处理；其余路径返回前端入口
+        if path.startswith("api/"):
+            return ("Not Found", 404)
+        return send_from_directory(app.static_folder, "index.html")
 
 # -------------------- utils --------------------
 def _now() -> float:
@@ -180,7 +199,7 @@ def _from_lc(m: BaseMessage) -> Dict:
 
 def _trim(msgs: List[BaseMessage]) -> List[BaseMessage]:
     if _trim_context:
-        # 使用你项目里的安全裁剪（块级/必保最近 human）
+        # 使用安全裁剪（块级/必保最近 human）
         try:
             return _trim_context(msgs, MAX_TURNS, keep_system=KEEP_SYSTEM)
         except Exception:
@@ -198,7 +217,7 @@ def _trim(msgs: List[BaseMessage]) -> List[BaseMessage]:
 
 @app.get("/api/healthz")
 def healthz():
-    return {"ok": True, "use_ltm": USE_LTM}
+    return {"ok": True, "use_ltm": USE_LTM, "use_vec_db": USE_VEC_DB}
 
 @app.post("/api/create_user")
 def create_user():
@@ -224,20 +243,28 @@ def create_user():
     with open(_user_token_hash_path(user_id), "w", encoding="utf-8") as f:
         f.write(token_h)
 
-    # init memory with name/description (if memory module available)
-    if SimpleMemory is not None:
-        try:
-            mem = SimpleMemory(path=_user_memory_path(user_id))
-            if name:
-                mem.remember(f"User name: {name}", kind="profile", meta={})
-            if description:
-                mem.remember(f"User description: {description}", kind="profile", meta={})
-        except Exception:
-            pass
-    else:
-        # at least create empty file
-        _ensure_dir(udir)
-        open(_user_memory_path(user_id), "a", encoding="utf-8").close()
+    if USE_LTM:
+
+        if USE_VEC_DB:  # init memory with name/description using Weaviate
+            try:
+                if name:
+                    memory_store.remember(user_id, f"User name: {name}", kind="profile", meta={})
+                if description:
+                    memory_store.remember(user_id, f"User description: {description}", kind="profile", meta={})
+            except Exception as e:
+                print(f"Error remembering profile for user {user_id}: {e}")
+
+        else:  # use SimpleMemory
+            try:
+                mem = SimpleMemory(path=_user_memory_path(user_id))
+                if name:
+                    mem.remember(f"User name: {name}", kind="profile", meta={})
+                if description:
+                    mem.remember(f"User description: {description}", kind="profile", meta={})
+            except Exception:
+                print(f"Error remembering profile for user {user_id}: {e}")
+                _ensure_dir(udir)
+                open(_user_memory_path(user_id), "a", encoding="utf-8").close()
 
     return jsonify({"user_id": user_id, "identity_token": identity_token})
 
@@ -326,21 +353,24 @@ def chat():
         msgs_lc.append(_to_lc({"type": r.get("type"), "content": r.get("content")}))
 
     # 3) optional memory injection (one-off SystemMessage)
-    if USE_LTM and SimpleMemory is not None:
+    if USE_LTM:
         last_human = None
         for m in reversed(msgs_lc):
             if isinstance(m, HumanMessage):
                 last_human = m.content; break
         if last_human:
             try:
-                mem = SimpleMemory(path=_user_memory_path(user_id))
-                snips = mem.retrieve(last_human, k=4, min_sim=0.55, verbose=VERBOSE)
+                if USE_VEC_DB:
+                    snips = memory_store.retrieve(user_id, last_human, k=4, min_sim=0.55, verbose=VERBOSE)
+                else:
+                    snips = SimpleMemory(path=_user_memory_path(user_id)).retrieve(last_human, k=4, min_sim=0.55, verbose=VERBOSE)
+
                 if snips:
                     mem_text = format_mem_snippets(snips)
                     insert_at = 1 if msgs_lc and isinstance(msgs_lc[0], SystemMessage) else 0
                     msgs_lc = msgs_lc[:insert_at] + [SystemMessage(content=mem_text)] + msgs_lc[insert_at:]
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Error retrieving memory for user {user_id}: {e}")
 
     # 4) trim context (safe) then call orchestrator
     msgs_trimmed = _trim(msgs_lc)
@@ -352,13 +382,16 @@ def chat():
     _append_jsonl(statep, {"type": "ai", "content": ai_text, "ts": _now()})
 
     # 6) optional: write to long term memory
-    if USE_LTM and SimpleMemory is not None:
+    if USE_LTM:
         try:
-            mem = SimpleMemory(path=_user_memory_path(user_id))
             last_user = message.get("content","")
             snippet = (f"Q: {last_user}\nA: {ai_text}")[:800]
-            mem.remember(snippet, kind="turn", meta={"session_id": session_id})
-        except Exception:
+            if USE_VEC_DB:
+                memory_store.remember(user_id, snippet, kind="turn", meta={"session_id": session_id})
+            else:
+                SimpleMemory(path=_user_memory_path(user_id)).remember(snippet, kind="turn", meta={"session_id": session_id})
+        except Exception as e:
+            print(f"Error remembering turn for user {user_id}: {e}")
             pass
 
     if not stream:
@@ -375,4 +408,10 @@ def chat():
 if __name__ == "__main__":
     os.makedirs(DATA_ROOT, exist_ok=True)
     port = int(os.environ.get("PORT", "8080"))
-    app.run(host="0.0.0.0", port=port)
+    try:
+        app.run(host="0.0.0.0", port=port)
+    except KeyboardInterrupt:
+        print("\nCleaning up...")
+    finally:
+        if memory_store:
+            memory_store.client.close()

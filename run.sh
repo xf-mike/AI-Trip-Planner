@@ -7,5 +7,5 @@ uv venv
 source .venv/bin/activate
 pip install -r requirements.txt
 export OPENAI_API_KEY=**************
-python production.py
+python app.py
 deactivate

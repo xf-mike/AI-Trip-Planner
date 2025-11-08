@@ -7,3 +7,5 @@ ADMIN_IDENTITY_TOKEN
 data
 ID_TOKEN
 eval_runs
+weaviate_data
+.env

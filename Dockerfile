@@ -30,5 +30,10 @@ COPY --from=frontend-builder /app/frontend/dist ./dist
 # 暴露端口
 EXPOSE 8080
 
+# Parameters
+ENV RUN_AS_DEV=False
+ENV USE_LTM=True
+ENV USE_VEC_DB=True
+
 # 启动命令
-CMD ["python", "production.py"]
+CMD ["python", "app.py"]
