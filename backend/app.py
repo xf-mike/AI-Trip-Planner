@@ -22,6 +22,8 @@
 from __future__ import annotations
 import os, json, time, uuid, hashlib, logging
 from typing import Any, Dict, List, Optional
+from collections import OrderedDict
+import threading
 
 from flask import Flask, request, jsonify, Response, send_from_directory
 from flask_cors import CORS
@@ -49,6 +51,7 @@ VERBOSE = os.environ.get("VERBOSE", "1").lower() in {"1", "true", "yes"}
 MAX_TURNS = int(os.environ.get("MAX_TURNS_IN_CONTEXT", "16"))
 KEEP_SYSTEM = int(os.environ.get("KEEP_SYSTEM", "2"))
 RUN_AS_DEV = os.environ.get("RUN_AS_DEV", "1").lower() in {"1", "true", "yes"}
+CACHE_SIZE = int(os.environ.get("JSONL_CACHE_SIZE", "15"))
 
 if RUN_AS_DEV:
     app = Flask(__name__)
@@ -84,6 +87,66 @@ _llm = init_llm(TOOLS)
 _invoke = make_app(_llm, TOOLS)
 print(f"Memory: Short{'+Long' if USE_LTM else ''} | Max context scale: {MAX_TURNS}")
 print(f"Running Mode: {'Development' if RUN_AS_DEV else 'Production'}")
+print(f"JSONL CACHE: {CACHE_SIZE} entries")
+
+# -------------------- LRU Cache for JSONL --------------------
+class JSONLCache:
+    """Thread-safe LRU cache for JSONL file reads with write-through on appends."""
+    
+    def __init__(self, max_size: int = 15):
+        self.max_size = max_size
+        self.cache: OrderedDict[str, List[Dict]] = OrderedDict()
+        self.lock = threading.Lock()
+    
+    def get(self, path: str) -> Optional[List[Dict]]:
+        """Get cached data if available, otherwise return None."""
+        with self.lock:
+            if path in self.cache:
+                # Move to end (most recently used)
+                self.cache.move_to_end(path)
+                return self.cache[path].copy()  # Return copy to prevent external modifications
+            return None
+    
+    def put(self, path: str, data: List[Dict]):
+        """Cache the data, evicting LRU entry if needed."""
+        with self.lock:
+            if path in self.cache:
+                # Update existing entry
+                self.cache.move_to_end(path)
+            else:
+                # Add new entry, evict if needed
+                if len(self.cache) >= self.max_size:
+                    self.cache.popitem(last=False)  # Remove least recently used
+            
+            self.cache[path] = data.copy()  # Store copy to prevent external modifications
+    
+    def append(self, path: str, obj: Dict):
+        """Append to cached data if present."""
+        with self.lock:
+            if path in self.cache:
+                self.cache[path].append(obj)
+                self.cache.move_to_end(path)  # Mark as recently used
+    
+    def invalidate(self, path: str):
+        """Remove entry from cache."""
+        with self.lock:
+            self.cache.pop(path, None)
+    
+    def clear(self):
+        """Clear all cache entries."""
+        with self.lock:
+            self.cache.clear()
+    
+    def stats(self) -> Dict[str, int]:
+        """Return cache statistics."""
+        with self.lock:
+            return {
+                "size": len(self.cache),
+                "max_size": self.max_size
+            }
+
+# Global cache instance
+_jsonl_cache = JSONLCache(max_size=CACHE_SIZE)
 
 # -------------------- Frontend Hosting --------------------
 # 前端路由兜底：不是 /api 的都交给 index.html
@@ -138,10 +201,21 @@ def _write_json(path: str, obj: Any):
 
 def _append_jsonl(path: str, obj: Any):
     _ensure_dir(os.path.dirname(path))
+
+    # Write to disk first (write-through)
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
+    # update cache entry
+    _jsonl_cache.append(path, obj)
+
 def _read_jsonl(path: str) -> List[Dict]:
+    # check cache first
+    cached = _jsonl_cache.get(path)
+    if cached is not None:
+        return cached
+
+    # cache miss
     out = []
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -151,6 +225,9 @@ def _read_jsonl(path: str) -> List[Dict]:
                     out.append(json.loads(line))
     except Exception:
         pass
+
+    # store in cache
+    _jsonl_cache.put(path, out)
     return out
 
 def _gen_id(prefix: str) -> str:
@@ -217,7 +294,7 @@ def _trim(msgs: List[BaseMessage]) -> List[BaseMessage]:
 
 @app.get("/api/healthz")
 def healthz():
-    return {"ok": True, "use_ltm": USE_LTM, "use_vec_db": USE_VEC_DB}
+    return {"ok": True, "use_ltm": USE_LTM, "use_vec_db": USE_VEC_DB, "cache_stats": _jsonl_cache.stats()}
 
 @app.post("/api/create_user")
 def create_user():
