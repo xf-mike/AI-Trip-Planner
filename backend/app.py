@@ -24,6 +24,7 @@ import os, json, time, uuid, hashlib, logging
 from typing import Any, Dict, List, Optional
 from collections import OrderedDict
 import threading
+from concurrent.futures import ThreadPoolExecutor
 
 from flask import Flask, request, jsonify, Response, send_from_directory
 from flask_cors import CORS
@@ -148,6 +149,9 @@ class JSONLCache:
 # Global cache instance
 _jsonl_cache = JSONLCache(max_size=CACHE_SIZE)
 
+# thread pool
+_write_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="disk-writer")
+
 # -------------------- Frontend Hosting --------------------
 # 前端路由兜底：不是 /api 的都交给 index.html
 if not RUN_AS_DEV:
@@ -200,14 +204,22 @@ def _write_json(path: str, obj: Any):
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
 def _append_jsonl(path: str, obj: Any):
+    """Append to JSONL file with async write."""
     _ensure_dir(os.path.dirname(path))
-
-    # Write to disk first (write-through)
-    with open(path, "a", encoding="utf-8") as f:
-        f.write(json.dumps(obj, ensure_ascii=False) + "\n")
-
-    # update cache entry
+    
+    # Update cache immediately
     _jsonl_cache.append(path, obj)
+    
+    # Write to disk asynchronously
+    _write_executor.submit(_write_to_disk, path, obj)
+
+def _write_to_disk(path: str, obj: Any):
+    """Background disk write operation."""
+    try:
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(obj, ensure_ascii=False) + "\n")
+    except Exception as e:
+        print(f"Error writing to {path}: {e}")
 
 def _read_jsonl(path: str) -> List[Dict]:
     # check cache first
