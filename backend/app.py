@@ -267,6 +267,14 @@ def _ensure_user_rel(uid):
     if uid not in RELATIONSHIPS:
         RELATIONSHIPS[uid] = {"amplify_from": [], "exposed_to": []}
 
+def _enrich_user_list(user_ids: List[str]) -> List[Dict[str, str]]:
+    enriched = []
+    for uid in user_ids:
+        # 从全局 USER_NAME_MAP 获取名字，如果找不到就显示 ID
+        name = USER_NAME_MAP.get(uid, f"Unknown({uid})")
+        enriched.append({"id": uid, "name": name})
+    return enriched
+
 # Init relationshps
 _load_relationships()
 
@@ -373,7 +381,11 @@ def get_sessions():
                 sessions.append(meta)
     sessions.sort(key=lambda x: x.get("created_at", 0), reverse=True)
 
-    return jsonify({"username": username, "sessions": sessions})
+    return jsonify({
+        "user_id": user_id,
+        "username": username,
+        "sessions": sessions
+    })
 
 
 @app.get("/api/get_conversation_history")
@@ -398,9 +410,13 @@ def get_relationships():
     if not user_id: return jsonify({"error":"unauthorized"}), 401
     
     _ensure_user_rel(user_id)
-    # 重新加载以防其他进程修改(虽然单进程不用，但为了稳健)
-    # _load_relationships() 
-    return jsonify(RELATIONSHIPS[user_id])
+    raw_data = RELATIONSHIPS[user_id]
+    
+    # 返回 {id, name} 对象列表，而不是纯 ID 列表
+    return jsonify({
+        "exposed_to": _enrich_user_list(raw_data["exposed_to"]),
+        "amplify_from": _enrich_user_list(raw_data["amplify_from"])
+    })
 
 
 #  严格保持数据一致性的更新接口
@@ -418,24 +434,30 @@ def update_relationships():
     _ensure_user_rel(user_id)
     data = request.get_json(force=True)
     
+    # 注意：前端发送更新时，建议仍然发送 user_id 列表，这样最安全
+    # 但返回给前端的状态，我们给它包装成带 name 的格式，方便直接渲染
+    
     # 1. 处理 'exposed_to' 变更 (我控制谁能看我)
-    # -------------------------------------------------
     if "exposed_to" in data:
-        new_exposed = set(data["exposed_to"])
+        new_exposed = set(data["exposed_to"]) # 这里的 data 依然是 ID list
         old_exposed = set(RELATIONSHIPS[user_id]["exposed_to"])
         
         # 计算差集
         to_add = new_exposed - old_exposed     # 新增的箭头 A->B
         to_remove = old_exposed - new_exposed  # 删除的箭头 A->B
         
+        if (to_add - RELATIONSHIPS.keys()):
+            return jsonify({"error":"try to add invalid user IDs into exposed_to"}), 400
+        
         # 执行本地更新
         RELATIONSHIPS[user_id]["exposed_to"] = list(new_exposed)
         
         # [联动更新]: 既然我暴露给 B (A->B)，那么 B 的 amplify_from 必须包含 A
         for target_id in to_add:
-            _ensure_user_rel(target_id)
-            if user_id not in RELATIONSHIPS[target_id]["amplify_from"]:
-                RELATIONSHIPS[target_id]["amplify_from"].append(user_id)
+            if target_id in RELATIONSHIPS.keys():
+                # _ensure_user_rel(target_id)
+                if user_id not in RELATIONSHIPS[target_id]["amplify_from"]:
+                    RELATIONSHIPS[target_id]["amplify_from"].append(user_id)
         
         # [联动更新]: 既然我不给 B 看了，那么 B 的 amplify_from 必须移除 A
         for target_id in to_remove:
@@ -453,6 +475,8 @@ def update_relationships():
         old_amplify = set(RELATIONSHIPS[user_id]["amplify_from"])
         
         to_remove_src = old_amplify - new_amplify
+        if (new_amplify - RELATIONSHIPS.keys()) or (old_amplify - RELATIONSHIPS.keys()):
+            return jsonify({"error":"invalid user IDs specified in amplify_from"}), 400
         
         # 用户只能"取关"(删除箭头)，不能未经允许"关注"(新增箭头)
         # 如果前端传了新增的 ID，而那个 ID 并没有 expose 给当前用户，这通常是非法操作。
@@ -463,12 +487,21 @@ def update_relationships():
         RELATIONSHIPS[user_id]["amplify_from"] = list(new_amplify)
         
         for src_id in to_remove_src:
-            _ensure_user_rel(src_id)
-            if user_id in RELATIONSHIPS[src_id]["exposed_to"]:
-                RELATIONSHIPS[src_id]["exposed_to"].remove(user_id)
+            if src_id in RELATIONSHIPS.keys():
+                # _ensure_user_rel(src_id)
+                if user_id in RELATIONSHIPS[src_id]["exposed_to"]:
+                    RELATIONSHIPS[src_id]["exposed_to"].remove(user_id)
 
     _save_relationships()
-    return jsonify({"status": "ok", "current": RELATIONSHIPS[user_id]})
+    
+    # 返回更新后的状态，同时也带上 Name
+    return jsonify({
+        "status": "ok", 
+        "current": {
+            "exposed_to": _enrich_user_list(RELATIONSHIPS[user_id]["exposed_to"]),
+            "amplify_from": _enrich_user_list(RELATIONSHIPS[user_id]["amplify_from"])
+        }
+    })
 
 
 @app.post("/api/chat")

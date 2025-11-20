@@ -12,6 +12,7 @@ type Page = 'login'|'register'|'main'
 export default function App() {
   const [page, setPage] = useState<Page>('login')
   const [token, setToken] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | undefined>(undefined)
   const [username, setUsername] = useState<string | undefined>(undefined)
   const [currentSessionId, setCurrentSessionId] = useState<string | undefined>(undefined)
   const [currentSessionName, setCurrentSessionName] = useState<string | undefined>(undefined)
@@ -24,7 +25,11 @@ export default function App() {
       try {
         const res = await getSessions(t)           // 校验 token
         setToken(t)
-        setUsername(res.username || undefined)     // 用后端的名字
+        
+        // 同时设置 username 和 userId
+        if (res.user_id) setUserId(res.user_id)
+        if (res.username) setUsername(res.username)
+
         // 恢复 session（如果你已经实现 localStorage 记忆）
         const sid = localStorage.getItem('currentSessionId') || undefined
         const sname = localStorage.getItem('currentSessionName') || undefined
@@ -60,7 +65,7 @@ export default function App() {
     delCookie('identity_token'); delCookie('username')
     localStorage.removeItem('currentSessionId')
     localStorage.removeItem('currentSessionName')
-    setToken(null); setUsername(undefined)
+    setToken(null); setUsername(undefined); setUserId(undefined)
     setCurrentSessionId(undefined); setCurrentSessionName(undefined)
     setView('new'); setPage('login')
   }
@@ -73,6 +78,7 @@ export default function App() {
     <div style={{display:'grid', gridTemplateColumns:'280px 1fr', height:'100vh', width: '1500px', overflow:'hidden', minHeight: 0}}>
       <Sidebar
         token={token!}
+        userId={userId}
         username={username}
         onUsername={(n) => setUsername(n)}
         onLogout={onLogout}
