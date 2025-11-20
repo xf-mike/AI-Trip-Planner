@@ -21,7 +21,7 @@
 
 from __future__ import annotations
 import os, json, time, uuid, hashlib, logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from flask import Flask, request, jsonify, Response, send_from_directory
 from flask_cors import CORS
@@ -72,7 +72,7 @@ if USE_VEC_DB:
     try:
         # Initialize the client once, globally
         memory_store = WeaviateMemory(openai_key=os.environ.get("OPENAI_API_KEY"))
-        print("WeaviateMemory initialized successfully.")
+
     except Exception as e:
         print(f"WARNING: Failed to initialize WeaviateMemory client: {e}")
         print(f"\nUse SimpleMemory instead.")
@@ -213,11 +213,69 @@ def _trim(msgs: List[BaseMessage]) -> List[BaseMessage]:
         return out
     return msgs[-MAX_TURNS:]
 
+# -------------------- User Metadata --------------------
+USER_NAME_MAP = {}
+
+# 用户名加载函数
+def _load_user_names():
+    global USER_NAME_MAP
+    root = os.path.join(DATA_ROOT, "user_data")
+    if not os.path.exists(root):
+        return
+    for uid in os.listdir(root):
+        meta_path = _user_meta_path(uid)
+        # 优化：只读一次文件
+        meta = _read_json(meta_path, {})
+        if meta and "name" in meta:
+            USER_NAME_MAP[uid] = meta["name"]
+    print(f"[INFO] Loaded metadata for {len(USER_NAME_MAP)} users.")
+
+# 记忆片段 ID 到 Name 的映射辅助函数
+def _map_snippets_to_names(snips: List[Tuple[Any, float]]) -> List[Tuple[Any, float]]:
+    """Replaces user_id with username in the MemoryItem object's user_id field for formatting."""
+    for item, score in snips:
+        original_uid = getattr(item, 'user_id', None)
+        
+        if original_uid:
+            # 查找用户名，如果不存在则使用原来的 user_id 作为 fallback
+            username = USER_NAME_MAP.get(original_uid, original_uid)
+            # 替换 MemoryItem 对象实例的 user_id 属性
+            setattr(item, 'user_id', username) 
+            
+    return snips
+
+# Init user data
+_load_user_names()
+
+# -------------------- Global Relationships Management --------------------
+RELATIONSHIPS_FILE = os.path.join(DATA_ROOT, "relationships.json")
+RELATIONSHIPS = {} 
+
+def _load_relationships():
+    global RELATIONSHIPS
+    if os.path.exists(RELATIONSHIPS_FILE):
+        RELATIONSHIPS = _read_json(RELATIONSHIPS_FILE, {})
+    else:
+        RELATIONSHIPS = {}
+    print(f"[INFO] Loaded relationships for {len(RELATIONSHIPS)} users.")
+
+def _save_relationships():
+    _write_json(RELATIONSHIPS_FILE, RELATIONSHIPS)
+
+def _ensure_user_rel(uid):
+    """Helper ensuring a user dict exists in global RELATIONSHIPS."""
+    if uid not in RELATIONSHIPS:
+        RELATIONSHIPS[uid] = {"amplify_from": [], "exposed_to": []}
+
+# Init relationshps
+_load_relationships()
+
 # -------------------- endpoints --------------------
 
 @app.get("/api/healthz")
 def healthz():
     return {"ok": True, "use_ltm": USE_LTM, "use_vec_db": USE_VEC_DB}
+
 
 @app.post("/api/create_user")
 def create_user():
@@ -230,6 +288,13 @@ def create_user():
     user_id = _gen_id("u")
     identity_token = uuid.uuid4().hex + uuid.uuid4().hex  # long random
     token_h = _sha256(identity_token)
+
+    #  初始化用户的memory sharing网络
+    _ensure_user_rel(user_id)
+    _save_relationships()
+
+    # update metadata
+    USER_NAME_MAP[user_id] = name
 
     # create dirs and files
     udir = _user_dir(user_id)
@@ -248,9 +313,9 @@ def create_user():
         if USE_VEC_DB:  # init memory with name/description using Weaviate
             try:
                 if name:
-                    memory_store.remember(user_id, f"User name: {name}", kind="profile", meta={})
+                    memory_store.remember(user_id, f"User name: {name}", kind="profile", meta={}, verbose=VERBOSE)
                 if description:
-                    memory_store.remember(user_id, f"User description: {description}", kind="profile", meta={})
+                    memory_store.remember(user_id, f"User description: {description}", kind="profile", meta={}, verbose=VERBOSE)
             except Exception as e:
                 print(f"Error remembering profile for user {user_id}: {e}")
 
@@ -295,8 +360,7 @@ def get_sessions():
         return jsonify({"error":"unauthorized"}), 401
 
     # read user info
-    user_meta = _read_json(_user_meta_path(user_id), {})
-    username = user_meta.get("name", "User")
+    username = USER_NAME_MAP.get(user_id, "User")
 
     # concatenate
     sroot = os.path.join(_user_dir(user_id), "sessions")
@@ -326,6 +390,87 @@ def get_conversation_history():
     messages = [ {"type": r.get("type"), "content": r.get("content")} for r in rows ]
     return jsonify({"messages": messages})
 
+
+#  获取关系接口
+@app.get("/api/get_relationships")
+def get_relationships():
+    user_id = _auth_user(request)
+    if not user_id: return jsonify({"error":"unauthorized"}), 401
+    
+    _ensure_user_rel(user_id)
+    # 重新加载以防其他进程修改(虽然单进程不用，但为了稳健)
+    # _load_relationships() 
+    return jsonify(RELATIONSHIPS[user_id])
+
+
+#  严格保持数据一致性的更新接口
+@app.post("/api/update_relationships")
+def update_relationships():
+    """
+    更新当前用户的关系网。
+    逻辑：维护 'Arrow' (A -> B) 的一致性。
+    - A.exposed_to 包含 B <==> B.amplify_from 包含 A
+    用户可以单方面切断箭头。
+    """
+    user_id = _auth_user(request)
+    if not user_id: return jsonify({"error":"unauthorized"}), 401
+    
+    _ensure_user_rel(user_id)
+    data = request.get_json(force=True)
+    
+    # 1. 处理 'exposed_to' 变更 (我控制谁能看我)
+    # -------------------------------------------------
+    if "exposed_to" in data:
+        new_exposed = set(data["exposed_to"])
+        old_exposed = set(RELATIONSHIPS[user_id]["exposed_to"])
+        
+        # 计算差集
+        to_add = new_exposed - old_exposed     # 新增的箭头 A->B
+        to_remove = old_exposed - new_exposed  # 删除的箭头 A->B
+        
+        # 执行本地更新
+        RELATIONSHIPS[user_id]["exposed_to"] = list(new_exposed)
+        
+        # [联动更新]: 既然我暴露给 B (A->B)，那么 B 的 amplify_from 必须包含 A
+        for target_id in to_add:
+            _ensure_user_rel(target_id)
+            if user_id not in RELATIONSHIPS[target_id]["amplify_from"]:
+                RELATIONSHIPS[target_id]["amplify_from"].append(user_id)
+        
+        # [联动更新]: 既然我不给 B 看了，那么 B 的 amplify_from 必须移除 A
+        for target_id in to_remove:
+            _ensure_user_rel(target_id)
+            if user_id in RELATIONSHIPS[target_id]["amplify_from"]:
+                RELATIONSHIPS[target_id]["amplify_from"].remove(user_id)
+
+    # 2. 处理 'amplify_from' 变更 (我控制我想看谁)
+    # -------------------------------------------------
+    # 注意：通常用户不能强行 amplify 别人（除非对方 expose），
+    # 但如果 UI 允许用户"取关" (停止接收某人的记忆)，这里需要处理移除逻辑。
+    # 为了简单，我们假设 UI 传来的数据是用户期望的最终状态。
+    if "amplify_from" in data:
+        new_amplify = set(data["amplify_from"])
+        old_amplify = set(RELATIONSHIPS[user_id]["amplify_from"])
+        
+        to_remove_src = old_amplify - new_amplify
+        
+        # 用户只能"取关"(删除箭头)，不能未经允许"关注"(新增箭头)
+        # 如果前端传了新增的 ID，而那个 ID 并没有 expose 给当前用户，这通常是非法操作。
+        # 但为了健壮性，我们只处理"删除"操作的一致性，或者完全信任 exposed_to 逻辑。
+        
+        # 这里我们实现双向一致性：如果我不再 amplify B，意味着箭头 A<-B 断裂，
+        # 那么 B 的 exposed_to 也应该移除 A。
+        RELATIONSHIPS[user_id]["amplify_from"] = list(new_amplify)
+        
+        for src_id in to_remove_src:
+            _ensure_user_rel(src_id)
+            if user_id in RELATIONSHIPS[src_id]["exposed_to"]:
+                RELATIONSHIPS[src_id]["exposed_to"].remove(user_id)
+
+    _save_relationships()
+    return jsonify({"status": "ok", "current": RELATIONSHIPS[user_id]})
+
+
 @app.post("/api/chat")
 def chat():
     """Non-streaming chat: append user msg -> build context -> call graph -> append ai -> return last_ai.
@@ -338,6 +483,8 @@ def chat():
     data = request.get_json(force=True)
     session_id = data.get("session_id", "")
     message = data.get("message", {})
+    should_share = len(RELATIONSHIPS[user_id]["exposed_to"]) > 0
+    external_source_ids = RELATIONSHIPS[user_id]["amplify_from"]
 
     if not session_id or not message:
         return jsonify({"error":"session_id and message required"}), 400
@@ -361,12 +508,20 @@ def chat():
         if last_human:
             try:
                 if USE_VEC_DB:
-                    snips = memory_store.retrieve(user_id, last_human, k=4, min_sim=0.55, verbose=VERBOSE)
+                    snips = memory_store.retrieve(
+                        user_id, 
+                        last_human, 
+                        k=4, 
+                        min_sim=0.55, 
+                        verbose=VERBOSE,
+                        external_user_ids=external_source_ids 
+                    )
+                    snips = _map_snippets_to_names(snips)  
                 else:
                     snips = SimpleMemory(path=_user_memory_path(user_id)).retrieve(last_human, k=4, min_sim=0.55, verbose=VERBOSE)
 
                 if snips:
-                    mem_text = format_mem_snippets(snips)
+                    mem_text = format_mem_snippets(snips, current_user_id=USER_NAME_MAP.get(user_id, user_id), verbose=VERBOSE)
                     insert_at = 1 if msgs_lc and isinstance(msgs_lc[0], SystemMessage) else 0
                     msgs_lc = msgs_lc[:insert_at] + [SystemMessage(content=mem_text)] + msgs_lc[insert_at:]
             except Exception as e:
@@ -387,7 +542,14 @@ def chat():
             last_user = message.get("content","")
             snippet = (f"Q: {last_user}\nA: {ai_text}")[:800]
             if USE_VEC_DB:
-                memory_store.remember(user_id, snippet, kind="turn", meta={"session_id": session_id})
+                memory_store.remember(
+                    user_id, 
+                    snippet, 
+                    kind="turn", 
+                    meta={"session_id": session_id},
+                    share=should_share,
+                    verbose=VERBOSE
+                )
             else:
                 SimpleMemory(path=_user_memory_path(user_id)).remember(snippet, kind="turn", meta={"session_id": session_id})
         except Exception as e:
