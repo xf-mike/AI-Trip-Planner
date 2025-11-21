@@ -317,7 +317,6 @@ def chat():
         return jsonify({"error":"session_id and message required"}), 400
 
     # 1) append the human message to state.jsonl
-    statep = session_state_path(user_id, session_id)
     append_session(user_id, session_id, {"type": message.get("type","human"), "content": message.get("content",""), "ts": now()})
 
     # 2) read state messages

@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional, Tuple
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
-
+from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from .llm import _get_api_key
 
@@ -146,7 +146,7 @@ class WeaviateMemory:
 
     # --------------------- write ---------------------
 
-    def remember(self, user_id: str, text: str, kind: str = "turn", meta: Optional[Dict[str, Any]] = None, *, max_chars: int = 800, share: bool = False, verbose=True):
+    def _remember(self, user_id: str, text: str, kind: str = "turn", meta: Optional[Dict[str, Any]] = None, *, max_chars: int = 800, share: bool = False, verbose=True):
         """
         写入 Weaviate。
         Weaviate (非 'text' 属性) 会自动处理向量化。
@@ -199,6 +199,15 @@ class WeaviateMemory:
             if verbose:
                 print(f"[VecDB] Saved Dual Copy: 1 Private + 1 Shared (Sanitized).")
                 print("[VecDB] Saved shared (Sanitized): " + sanitized_text[:30].replace('\n', ' ') + "...")
+
+
+    _remember_executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix="WeaviateMemory-remember")
+    
+    def remember(self, user_id: str, text: str, kind: str = "turn", meta: Optional[Dict[str, Any]] = None, *, max_chars: int = 800, share: bool = False, verbose=True):
+        """异步写入记忆, 避免阻塞主流程."""
+        # if verbose:
+        #     print(f"[VecDB] remember(user_id={user_id}, kind={kind}, text_len={len(text or '')}) ...")
+        self._remember_executor.submit(self._remember, user_id, text, kind, meta, max_chars=max_chars, share=share, verbose=verbose)
 
     # --------------------- read (retrieve) ---------------------
 

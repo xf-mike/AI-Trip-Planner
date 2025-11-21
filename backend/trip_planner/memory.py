@@ -7,6 +7,7 @@ from collections import defaultdict
 from langchain_core.messages import SystemMessage, HumanMessage
 import numpy as np
 from langchain_openai import OpenAIEmbeddings
+from concurrent.futures import ThreadPoolExecutor
 from .llm import _get_api_key
 
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "text-embedding-3-small")
@@ -82,8 +83,8 @@ class SimpleMemory:
         self._embs = emb[None, :] if self._embs is None else np.vstack([self._embs, emb]).astype(np.float32)
 
     # --------------------- write ---------------------
-
-    def remember(self, text: str, kind: str = "turn", meta: Optional[Dict[str, Any]] = None, *, max_chars: int = 800):
+    
+    def _remember(self, text: str, kind: str = "turn", meta: Optional[Dict[str, Any]] = None, *, max_chars: int = 800):
         """写入前做简单裁剪, 降低噪声.如果需要更强可在外层先做摘要."""
         text = (text or "").strip()
         if not text:
@@ -98,6 +99,15 @@ class SimpleMemory:
             meta=meta or {}
         )
         self._append(item, emb)
+
+
+    _remember_executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix="SimpleMemory-remember")
+    
+    def remember(self, text: str, kind: str = "turn", meta: Optional[Dict[str, Any]] = None, *, max_chars: int = 800, verbose=True):
+        """异步写入记忆, 避免阻塞主流程."""
+        # if verbose:
+        #     print(f"[Mem] remember(kind={kind}, text_len={len(text or '')}) ...")
+        self._remember_executor.submit(self._remember, text, kind, meta, max_chars=max_chars)
 
     # --------------------- read (retrieve) ---------------------
 
