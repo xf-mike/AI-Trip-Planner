@@ -249,4 +249,4 @@ if os.getenv("GOOGLE_API_KEY"):
 else:
     print("❌ Google Maps Directions Tool: disabled (missing GOOGLE_API_KEY or GOOGLE_CSE_ID)")
 
-print(f"Tools: {[t.name for t in TOOLS]}\n")
+print(f"Tools: {[t.name for t in TOOLS]}")

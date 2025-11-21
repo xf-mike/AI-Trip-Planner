@@ -178,7 +178,8 @@ def dict_to_line(item: Any, sim: float) -> str:
 def format_mem_snippets(
     snips: List[Tuple[Any, float]], 
     max_chars: int = 10000, 
-    current_user_id: Optional[str] = None,
+    multi_resource: bool = False,
+    current_user_name: Optional[str] = None,
     verbose = True
 ) -> str:
     """
@@ -191,7 +192,7 @@ def format_mem_snippets(
         return ""
 
     # --- 模式 1: 兼容模式 (未指定 current_user_id) ---
-    if current_user_id is None:
+    if not multi_resource:
         lines = ["Relevant prior context:"]
         current_len = len(lines[0])
         
@@ -199,7 +200,7 @@ def format_mem_snippets(
             # 尝试获取 user_id 用于显示，如果没有则不显示
             uid = getattr(item, "user_id", None)
             prefix = f"[{uid}] " if uid else ""
-            line = f"- {prefix}({item.kind}, {sim:.2f}) {item.text}"
+            line = f"- {prefix}({item.kind}) {item.text}"
             
             if current_len + len(line) > max_chars:
                 break
@@ -211,28 +212,28 @@ def format_mem_snippets(
     # --- 模式 2: 分组模式 (指定了 current_user_id) ---    
     grouped_mem = defaultdict(list)
     for item, sim in snips:
-        # 健壮性: 防止旧数据没有 user_id
-        uid = getattr(item, "user_id", "unknown")
-        grouped_mem[uid].append((item, sim))
+        # 健壮性: 防止旧数据没有 user_name 属性
+        user_name = getattr(item, "user_name", "unknown")
+        grouped_mem[user_name].append((item, sim))
 
     # 构建头部提示
     out_lines = []
     intro = (
         "There are some related memory contexts found in past chat history for reference.\n"
-        f"Notice that these memories may not only come from current user [{current_user_id}].\n"
+        f"Notice that these memories may not only come from current user [{current_user_name}].\n"
         "You must share the name and information of the other users with current user."
     )
     out_lines.append(intro)
     current_len = len(intro)
 
     # 1. 先处理当前用户 (Current User)
-    if current_user_id in grouped_mem:
-        header = f"Memory from current user [{current_user_id}]:"
+    if current_user_name in grouped_mem:
+        header = f"Memory from current user [{current_user_name}]:"
         if current_len + len(header) < max_chars:
             out_lines.append(header)
             current_len += len(header)
             
-            for item, sim in grouped_mem[current_user_id]:
+            for item, sim in grouped_mem[current_user_name]:
                 line = f"{dict_to_line(item, sim)}"
                 if current_len + len(line) > max_chars:
                     return "\n".join(out_lines)
@@ -240,14 +241,14 @@ def format_mem_snippets(
                 current_len += len(line)
         
         # 处理完后移除，避免重复
-        del grouped_mem[current_user_id]
+        del grouped_mem[current_user_name]
 
     # 2. 再处理其他用户 (Other Users)
-    for uid, items in grouped_mem.items():
+    for user_name, items in grouped_mem.items():
         if current_len >= max_chars:
             break
             
-        header = f"Memory from another user [{uid}]:"
+        header = f"Memory from another user [{user_name}]:"
         if current_len + len(header) > max_chars:
             break
             
