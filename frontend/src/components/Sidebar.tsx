@@ -90,11 +90,47 @@ export default function Sidebar({ token, userId, username, onUsername, onLogout,
     }
   }
   
-  // 复制 ID 到剪贴板
+  // 复制 ID 到剪贴板（使用 document.execCommand 兼容非 HTTPS 环境）
   const copyId = () => {
-    if(userId) {
-      navigator.clipboard.writeText(userId)
-      alert('User ID copied to clipboard!')
+    if (!userId) {
+        return; // 如果没有 userId 则直接退出
+    }
+
+    // 1. 创建一个临时的、隐藏的文本区域元素
+    const tempInput = document.createElement('textarea');
+    
+    // 2. 将要复制的内容放入该元素
+    tempInput.value = userId;
+    
+    // 3. 将元素设置为只读并移出屏幕，以防止干扰用户界面
+    tempInput.setAttribute('readonly', '');
+    tempInput.style.position = 'absolute';
+    tempInput.style.left = '-9999px'; 
+    document.body.appendChild(tempInput);
+    
+    // 4. 选择文本内容
+    tempInput.select();
+    
+    let success = false;
+    
+    // 5. 调用已弃用的复制命令
+    try {
+        // 关键步骤：执行复制命令
+        success = document.execCommand('copy'); 
+    } catch (err) {
+        console.error('Copy command failed:', err);
+    } finally {
+        // 6. 无论成功与否，都要移除临时元素
+        document.body.removeChild(tempInput);
+    }
+    
+    // 7. 给出反馈
+    if (success) {
+        alert('User ID copied to clipboard!');
+    } else {
+        // 如果失败，通常是因为浏览器限制或 API 被禁用
+        alert('JS copy failed. Please select the text and copy manually.');
+        // 可以选择在这里弹出一个提示框，包含 userId 供用户手动复制
     }
   }
 
@@ -147,7 +183,7 @@ export default function Sidebar({ token, userId, username, onUsername, onLogout,
           title="Click to copy"
           style={{marginBottom: '8px', color: '#60a5fa', cursor: 'pointer', display:'flex', alignItems:'center', gap:'4px'}}
         >
-          <span style={{color:'#9ca3af'}}>My ID:</span> {userId ? userId.slice(0, 8)+'...' : '...'} 📋
+          <span style={{color:'#9ca3af'}}>My ID:</span> {userId} 📋
         </div>
 
         <div style={{color: (exposedTo.length > 0 || amplifyFrom.length > 0) ? '#34d399' : '#9ca3af', marginBottom: '4px', fontWeight: 'bold'}}>

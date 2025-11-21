@@ -48,7 +48,7 @@ export default function App() {
         setPage('login')
       }
     })()
-  }, [])
+  }, [page])
 
   const onLogin = (t: string, n?: string) => {
     setToken(t)
