@@ -1,0 +1,69 @@
+version: '3.4'
+
+services:
+  # ======================================
+  # 1. 后端服务 (Backend Service)
+  # ======================================
+  backend:
+    # 使用您的镜像标签，与您的 docker build 命令保持一致
+    image: xf2000/trip-planner-app:v3
+    
+    # # 使用 build 块可以让您在没有镜像时，直接运行 'docker compose up --build' 来构建
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+      
+    # 🚨 仅暴露后端端口到主机
+    ports:
+      - "8080:8080" 
+      
+    # 从 .env 文件中导入变量
+    environment:
+      IS_DOCKER_COMPOSE: True
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GOOGLE_CSE_ID: ${GOOGLE_CSE_ID}
+      USE_LTM: True
+      USE_VEC_DB: True
+      VERBOSE: True
+      RUN_AS_DEV: False
+      
+    depends_on:
+      - weaviate 
+      
+    # 加入私有网络
+    networks:
+      - app-network 
+
+  # ======================================
+  # 2. Weaviate 服务 (Vector DB)
+  # ======================================
+  weaviate:
+    image: cr.weaviate.io/semitechnologies/weaviate:1.27.0
+    
+    # 🚨 移除 ports 映射，实现网络隔离（只能通过 backend 访问）
+    # ports:
+    #   - "5432:8080"
+    #   - "50051:50051"
+    
+    volumes:
+      - ./weaviate_data:/var/lib/weaviate
+    environment:
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-openai'
+      ENABLE_MODULES: 'text2vec-openai,generative-openai'
+      CLUSTER_HOSTNAME: 'weaviate'
+      # Weaviate 也需要访问 OpenAI Key
+      OPENAI_APIKEY: ${OPENAI_API_KEY}
+      
+    # 加入私有网络
+    networks:
+      - app-network 
+
+# ======================================
+# 3. 网络定义
+# ======================================
+networks:
+  app-network:
+    driver: bridge

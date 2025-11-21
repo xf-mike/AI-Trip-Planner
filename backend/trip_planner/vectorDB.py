@@ -102,13 +102,22 @@ class WeaviateMemory:
     - 写入: Weaviate 自动向量化 (text2vec-openai)
     - 检索: 召回(Weaviate 混合搜索) + 重排(Python 融合)
     """
-    def __init__(self, url: str = "http://localhost:8080", openai_key: str | None = None):
+    def __init__(self, openai_key: str | None = None):
         self.client = None
         self.openai_key = openai_key or _get_api_key()
-        try:
+
+        composed_by_docker = os.getenv('IS_DOCKER_COMPOSE', 'False').lower() in ('true', '1')
+        if composed_by_docker:
+            host_name = "weaviate"
+            api_port = 8080
+        else:
+            host_name = "localhost"
+            api_port = 5432
+
+        try: 
             self.client = weaviate.connect_to_local(
-                host="localhost",
-                port=5432,
+                host=host_name,
+                port=api_port,
                 grpc_port=50051,
                 headers={"X-OpenAI-Api-Key": self.openai_key}
             )

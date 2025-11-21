@@ -1,3 +1,7 @@
+# This version (V1) has been deprecated.
+# It is kept here for reference only.
+# Please refer to the latest version in `backend/app.py`.
+
 FROM python:3.11-slim
 
 
