@@ -3,6 +3,7 @@ from __future__ import annotations
 import os, json, time, math, re
 from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional, Tuple
+from collections import defaultdict
 from langchain_core.messages import SystemMessage, HumanMessage
 import numpy as np
 from langchain_openai import OpenAIEmbeddings
@@ -168,17 +169,105 @@ class SimpleMemory:
 
 # --------------------------- formatting ---------------------------
 
-def format_mem_snippets(snips: List[Tuple[MemoryItem, float]], max_chars: int = 800) -> str:
-    """把检索结果压成短提示, 注入 SystemMessage."""
+def dict_to_line(item: Any, sim: float) -> str:
+    """辅助格式化单行记忆"""
+    # clean_text = item.text.replace("\n", " ")
+    # return f"  - ({item.kind}, {sim:.2f}) {clean_text}"
+    return " - " + item.text.replace("\n", " ")
+
+def format_mem_snippets(
+    snips: List[Tuple[Any, float]], 
+    max_chars: int = 10000, 
+    multi_resource: bool = False,
+    current_user_name: Optional[str] = None,
+    verbose = True
+) -> str:
+    """
+    把检索结果压成短提示, 注入 SystemMessage.
+    
+    如果提供了 current_user_id: 按用户分组显示 (Current User 先, Others 后).
+    如果没有提供: 保持原有的扁平列表格式 (兼容旧逻辑).
+    """
     if not snips:
         return ""
-    lines: List[str] = []
-    for item, sim in snips:
-        lines.append(f"- ({item.kind}, {sim:.2f}) {item.text}")
-        if sum(len(x) for x in lines) > max_chars:
-            break
-    return "Relevant prior context:\n" + "\n".join(lines)
 
+    # --- 模式 1: 兼容模式 (未指定 current_user_id) ---
+    if not multi_resource:
+        lines = ["Relevant prior context:"]
+        current_len = len(lines[0])
+        
+        for item, sim in snips:
+            # 尝试获取 user_id 用于显示，如果没有则不显示
+            uid = getattr(item, "user_id", None)
+            prefix = f"[{uid}] " if uid else ""
+            line = f"- {prefix}({item.kind}) {item.text}"
+            
+            if current_len + len(line) > max_chars:
+                break
+            lines.append(line)
+            current_len += len(line)
+            
+        return "\n".join(lines)
+
+    # --- 模式 2: 分组模式 (指定了 current_user_id) ---    
+    grouped_mem = defaultdict(list)
+    for item, sim in snips:
+        # 健壮性: 防止旧数据没有 user_name 属性
+        user_name = getattr(item, "user_name", "unknown")
+        grouped_mem[user_name].append((item, sim))
+
+    # 构建头部提示
+    out_lines = []
+    intro = (
+        "There are some related memory contexts found in past chat history for reference.\n"
+        f"Notice that these memories may not only come from current user [{current_user_name}].\n"
+        "You must share the name and information of the other users with current user."
+    )
+    out_lines.append(intro)
+    current_len = len(intro)
+
+    # 1. 先处理当前用户 (Current User)
+    if current_user_name in grouped_mem:
+        header = f"Memory from current user [{current_user_name}]:"
+        if current_len + len(header) < max_chars:
+            out_lines.append(header)
+            current_len += len(header)
+            
+            for item, sim in grouped_mem[current_user_name]:
+                line = f"{dict_to_line(item, sim)}"
+                if current_len + len(line) > max_chars:
+                    return "\n".join(out_lines)
+                out_lines.append(line)
+                current_len += len(line)
+        
+        # 处理完后移除，避免重复
+        del grouped_mem[current_user_name]
+
+    # 2. 再处理其他用户 (Other Users)
+    for user_name, items in grouped_mem.items():
+        if current_len >= max_chars:
+            break
+            
+        header = f"Memory from another user [{user_name}]:"
+        if current_len + len(header) > max_chars:
+            break
+            
+        out_lines.append(header)
+        current_len += len(header)
+        
+        for item, sim in items:
+            line = f"{dict_to_line(item, sim)}"
+            if current_len + len(line) > max_chars:
+                break # 跳出内层循环
+            out_lines.append(line)
+            current_len += len(line)
+    if verbose:
+        print(f"[Mem] Inject {len(out_lines) - 1} memory items:")
+        for l in out_lines[1:]:
+            print(l[:40] + "...")
+        print()
+
+    return "\n".join(out_lines)
 
 
 def compose_tmp_message(state: dict, mem: SimpleMemory):

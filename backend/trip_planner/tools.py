@@ -1,4 +1,4 @@
-import requests
+import requests, os
 from datetime import datetime, timedelta, timezone
 from langchain_core.tools import tool
 
@@ -135,4 +135,118 @@ def weather_tool(city: str, date: str = "today") -> str:
         return f"[weather] Error: {e}"
 
 
+@tool("google_search_tool")
+def google_search_tool(query: str) -> str:
+    """Search Google for a list of snippets using the Custom Search JSON API."""
+    if meta["verbose"]:
+        print("[INFO] google_search_tool is called. Executing...")
+
+    # 假设环境变量已被设置，因为这个工具已被注入
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
+
+    try:
+        r = requests.get(
+            "https://www.googleapis.com/customsearch/v1",
+            params={
+                "key": GOOGLE_API_KEY,
+                "cx": GOOGLE_CSE_ID,
+                "q": query
+            },
+            headers=UA,
+            timeout=4
+        )
+        r.raise_for_status()
+        data = r.json()
+        items = data.get("items", [])
+
+        if not items:
+            return f"[google_search] No results found for: {query}"
+
+        results = []
+        for i, item in enumerate(items[:3]):
+            title = item.get("title")
+            snippet = item.get("snippet", "").replace("\n", "")
+            results.append(f"{i+1}. {title}: {snippet}")
+        
+        return "\n".join(results)
+
+    except Exception as e:
+        # 如果 API 密钥失效或服务未启用，请求仍可能失败
+        return f"[google_search] API call failed. Error: {e}"
+
+
+@tool("google_maps_directions_tool")
+def google_maps_directions_tool(origin: str, destination: str) -> str:
+    """Get travel directions from Google Maps Directions API."""
+    if meta["verbose"]:
+        print("[INFO] google_maps_directions_tool is called. Executing...")
+
+    # 假设环境变量已被设置
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
+    try:
+        r = requests.get(
+            "https://maps.googleapis.com/maps/api/directions/json",
+            params={
+                "origin": origin,
+                "destination": destination,
+                "key": GOOGLE_API_KEY,
+                "units": "metric"
+            },
+            headers=UA,
+            timeout=4
+        )
+        r.raise_for_status()
+        data = r.json()
+        
+        if data.get("status") != "OK" or not data.get("routes"):
+            return f"[google_maps] Could not find directions from {origin} to {destination}. Status: {data.get('status')}"
+
+        route = data["routes"][0]
+        leg = route["legs"][0]
+        summary = route.get("summary", "N/A")
+        distance = leg["distance"]["text"]
+        duration = leg["duration"]["text"]
+        
+        steps = []
+        for i, step in enumerate(leg["steps"][:3]):
+            import re
+            instructions = re.sub(r'<[^>]+>', '', step["html_instructions"])
+            steps.append(f"  {i+1}. {instructions} ({step['distance']['text']})")
+        
+        steps_summary = "\n".join(steps)
+        if len(leg["steps"]) > 3:
+            steps_summary += "\n  ..."
+
+        return (
+            f"Directions from {origin} to {destination} ({summary}):\n"
+            f"Total Distance: {distance}\n"
+            f"Total Duration: {duration}\n"
+            f"First steps:\n{steps_summary}"
+        )
+
+    except Exception as e:
+        return f"[google_maps] API call failed. Error: {e}"
+
+
+# --- 2. 动态构建 TOOLS 列表 ---
+
+# 基础工具 (始终包含)
 TOOLS = [search_tool, weather_tool]
+
+# 检查并注入 Google Search Tool
+if os.getenv("GOOGLE_API_KEY") and os.getenv("GOOGLE_CSE_ID"):
+    TOOLS.append(google_search_tool)
+    print("✅ Google Search Tool: enabled")
+else:
+    print("❌ Google Search Tool: disabled (missing GOOGLE_API_KEY or GOOGLE_CSE_ID)")
+
+# 检查并注入 Google Maps Directions Tool
+if os.getenv("GOOGLE_API_KEY"):
+    TOOLS.append(google_maps_directions_tool)
+    print("✅ Google Maps Directions Tool: enabled")
+else:
+    print("❌ Google Maps Directions Tool: disabled (missing GOOGLE_API_KEY or GOOGLE_CSE_ID)")
+
+print(f"Tools: {[t.name for t in TOOLS]}")
