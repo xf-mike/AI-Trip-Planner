@@ -1,0 +1,26 @@
+{
+  "response": {
+    "mem_index": 0,
+    "owner": "agent",
+    "content": "Here are some highly-rated restaurants in Rome for dinner tonight:\n\n1. **Armando al Pantheon** - Known for its traditional Roman cuisine and located near the Pantheon.\n2. **Roscioli Salumeria con Cucina** - A deli and restaurant offering a mix of Italian dishes and gourmet products.\n3. **Trattoria Da Enzo al 29** - A cozy spot famous for its authentic Roman dishes like carbonara and cacio e pepe.\n4. **La Taverna dei Fori Imperiali** - Offers a great selection of Roman dishes in a charming setting.\n\nMake sure to check for availability and consider making a reservation!",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "google_search_tool",
+        "output": "1. Must try restaurants in rome : r/rome: May 8, 2024 ... Does anyone have recs for nice restaurants for lunch/dinner that also aren't tourist traps? ... We looked for highly-rated places, but even ...\n2. Where to eat in Rome: a local's guide | Luggage and Life: Reservations highly recommended. Barred. Via Cesena 30 – +39 06 9727 3382. Lunch: Sundays only, 12:30 – 2 ...\n3. Good restaurants in Rome : r/rome: Apr 1, 2025 ... Dinner at Vino e Pasta - walked in, no reservations. Ordered carbonara, cacio y Pepe, and pistachio tiramisu - all delicious, tiramisu was to ..."
+      },
+      {
+        "name": "google_search_tool",
+        "output": "1. THE 10 BEST Restaurants in Rome (Updated November 2025): Restaurants in Rome · 1. Ristorante Arlù. 4.6. (3,835 reviews) · 2. Ristorante La Tavernetta 48. 4.5. (1,841 reviews) · 3. Come 'na Vorta Pasta E Vino - Largo ...\n2. 41 Best Restaurants in Rome, According to a Local Expert | Condé ...: Mar 28, 2025 ... Our top recommendations for the best restaurants in Rome, Italy, with pictures, reviews, and details. Find the best in dining based on ...\n3. Where to eat in Rome: a local's guide | Luggage and Life: Emma is located a short stroll from Campo de' Fiori, which makes it a great spot for lunch or dinner during a day of sightseeing. With an emphasis on organic, ..."
+      },
+      {
+        "name": "google_search_tool",
+        "output": "1. Must try restaurants in rome : r/rome: May 8, 2024 ... Based on it, we went to Osteria de Memmo for dinner and had great food and very nice service. On another evening we wanted something closer ...\n2. Where to eat in Rome: a local's guide | Luggage and Life: This list of great restaurants in Rome ... Emma is located a short stroll from Campo de' Fiori, which makes it a great spot for lunch or dinner during a day of ...\n3. The 8 Best Restaurants In Rome | Eating Europe: Jul 4, 2024 ... Armando al Pantheon · Roscioli Salumeria con Cucina · Cantina e Cucina · La Taverna dei Fori Imperiali · SantoPalato · Trattoria Da Enzo al 29."
+      }
+    ]
+  },
+  "evaluate": {}
+}

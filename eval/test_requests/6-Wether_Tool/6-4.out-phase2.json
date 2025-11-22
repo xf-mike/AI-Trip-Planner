@@ -1,0 +1,18 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "Tomorrow morning in Denver, the weather will be overcast with temperatures ranging from -0.0°C to 14.0°C. There is no expected precipitation. \n\nIt looks like the weather should be manageable, so you may not need to delay your ride. However, be prepared for chilly temperatures!",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "Weather in Denver (United States) on 2025-11-22: overcast, min -0.0°C / max 14.0°C, precip 0.0mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

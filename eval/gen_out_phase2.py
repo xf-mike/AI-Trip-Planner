@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 import logging
 
-# Test Phase 1 scenario
-USE_LTM = False
+# Test Phase 2 scenario
+USE_LTM = True
 
 # --- Path Setup ---
 # 1. Get the directory of this script (run_eval.py), which is /.../eval/
@@ -27,7 +27,7 @@ except ImportError:
 
 # --- Configuration ---
 TEST_REQUESTS_DIR = script_dir / "test_requests"
-DEFAULT_CONTEXT_SIZE = 10 # Use a reasonable default context size
+DEFAULT_CONTEXT_SIZE = 20 # Use a reasonable default context size
 LOG = logging.getLogger(__name__)
 
 def process_test_file(test_file_path: Path):
@@ -37,7 +37,7 @@ def process_test_file(test_file_path: Path):
     """
     # --- NEW: SKIP LOGIC ---
     # 1. Determine output path
-    new_name = test_file_path.name.replace(".test.json", ".out.json")
+    new_name = test_file_path.name.replace(".test.json", ".out-phase2.json")
     output_file_path = test_file_path.with_name(new_name)
     
     # 2. Check if output file already exists
@@ -118,7 +118,7 @@ def process_inter_session_test_file(test_file_path: Path):
     """
     # --- NEW: SKIP LOGIC ---
     # 1. Determine output path
-    new_name = test_file_path.name.replace(".test.json", ".out.json")
+    new_name = test_file_path.name.replace(".test.json", ".out-phase2.json")
     output_file_path = test_file_path.with_name(new_name)
     
     # 2. Check if output file already exists

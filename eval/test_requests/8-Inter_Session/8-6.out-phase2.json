@@ -1,0 +1,13 @@
+{
+  "response": {
+    "mem_index": 1,
+    "owner": "agent",
+    "content": "The Melia White House is indeed well-located near Regent's Park and offers good access to public transport. If it was ruled out, it might have been due to factors like price, availability, or specific amenities that didn't meet your needs. Would you like me to check current availability and rates for the hotel?",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

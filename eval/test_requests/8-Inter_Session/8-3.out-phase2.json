@@ -1,0 +1,22 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "### Flights to Miami in November 2023\n- **Cheap Flights**: Prices for one-way flights to Miami start at **$29**, and round-trip flights are available from **$58**. Check platforms like Expedia for the best deals.\n- **Airlines**: American Airlines is launching new non-stop flights to Miami starting November 11, 2023.\n\n### 5-Star Hotels in Miami\n1. **Acqualina Resort**: A luxury resort known for its exceptional service and beachfront location.\n2. **Eden Roc Miami Beach Resort**: Features three beachfront pools and a vibrant tropical setting.\n3. **Other Options**: Explore various luxury hotels in Miami, including iconic landmarks and modern resorts.\n\n### Next Steps\n- **Book Flights**: Use flight comparison tools to find the best deals for your travel dates.\n- **Reserve Accommodation**: Consider booking one of the mentioned luxury hotels for a premium experience.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "google_search_tool",
+        "output": "1. Find cheap flights to Miami (MIA) | American Airlines: Use our flight search tool to compare prices across dates to see how much you can save. Avoid peak season: Summer and early fall (roughly June through November) ...\n2. American Airlines Begins Non-Stop Seasonal Flights Between ...: Nov 10, 2023 ... American Airlines' new non-stop flights between Blue Grass Airport (LEX) and Miami International Airport (MIA) begin tomorrow, November 11, 2023.\n3. $29 Cheap Flights to Miami, FL - Expedia: How much is the cheapest flight to Miami? Prices were available within the past 7 days and start at $29 for one-way flights and $58 for round trip, ..."
+      },
+      {
+        "name": "google_search_tool",
+        "output": "1. 27 Best Hotels in Miami (2025), From Key Biscayne to Wynwood ...: Jun 12, 2025 ... Miami's hotel landscape is an exciting and ever-evolving sprint through a bevy of options, from luxury resorts and iconic landmarks to ...\n2. News & Awards | Acqualina Resort: News & Awards. News & Awards. November 2025. Modern Luxury Miami. Step Inside ... Miami's best hotels for 2023. READ MORE New York Post. December 2023. Elite ...\n3. Eden Roc Miami Beach Resort | An Iconic Luxury Miami Hotel: Three sparkling beachfront pools and an exclusive strip of beach invite you to let loose in a relaxed, fun, tropical setting. Discover a Miami Beach icon."
+      }
+    ]
+  },
+  "evaluate": {}
+}

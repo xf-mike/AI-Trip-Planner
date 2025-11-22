@@ -1,0 +1,18 @@
+{
+  "response": {
+    "mem_index": 0,
+    "owner": "agent",
+    "content": "Tomorrow in San Diego, the weather will be overcast with a minimum temperature of 12.3°C and a maximum of 18.7°C. No precipitation is expected.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "Weather in San Diego (United States) on 2025-11-22: overcast, min 12.3°C / max 18.7°C, precip 0.0mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

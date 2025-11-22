@@ -1,0 +1,13 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "Focusing 80% of your time on the South Island while including the Tongariro Alpine Crossing is feasible, but it will require careful planning. Here’s a suggested itinerary:\n\n### Suggested Itinerary (10 Days)\n- **Days 1-3: North Island**\n  - **Day 1:** Arrive in Auckland, travel to Tongariro National Park (approx. 4-5 hours).\n  - **Day 2:** Hike the Tongariro Alpine Crossing (7-8 hours).\n  - **Day 3:** Explore the park or travel back to Auckland and fly to the South Island.\n\n- **Days 4-10: South Island**\n  - **Day 4:** Fly to Queenstown (or drive if you prefer).\n  - **Days 5-6:** Hike in Fiordland National Park (Milford Track or Routeburn Track).\n  - **Days 7-8:** Explore Queenstown (Skyline, local hikes).\n  - **Days 9-10:** Visit Aoraki/Mount Cook National Park for stunning hikes (Hooker Valley Track).\n\n### Considerations\n- **Travel Time:** Factor in travel time between locations. Domestic flights can save time.\n- **Hiking Difficulty:** Ensure you’re prepared for the Tongariro hike, as it’s challenging.\n- **Accommodations:** Book in advance, especially in popular areas.\n\nThis itinerary allows you to experience both the North and South Islands without feeling too rushed, while still focusing on the dramatic landscapes and challenging hikes you love.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

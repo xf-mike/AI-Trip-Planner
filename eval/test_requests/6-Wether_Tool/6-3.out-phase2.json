@@ -1,0 +1,30 @@
+{
+  "response": {
+    "mem_index": 0,
+    "owner": "agent",
+    "content": "This weekend, the weather forecast shows:\n\n- **Miami**: Max temperature of 27.4°C\n- **Cancun**: Max temperature of 29.6°C\n\nCancun will be warmer than Miami.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "[weather] Forecast fetch failed for Miami."
+      },
+      {
+        "name": "weather_tool",
+        "output": "[weather] Forecast fetch failed for Cancún."
+      },
+      {
+        "name": "weather_tool",
+        "output": "Weather in Miami (United States) on 2025-11-22: overcast, min 18.3°C / max 27.4°C, precip 0.0mm."
+      },
+      {
+        "name": "weather_tool",
+        "output": "Weather in Cancún (Mexico) on 2025-11-22: partly cloudy, min 21.2°C / max 29.6°C, precip 0.0mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

@@ -1,0 +1,13 @@
+{
+  "response": {
+    "mem_index": 10,
+    "owner": "agent",
+    "content": "Swapping Seville for San Sebastián will give you a different vibe, focusing more on coastal beauty and culinary delights. Here’s how your trip could look:\n\n### Itinerary Overview:\n1. **Madrid (3 Days)**:\n   - Explore art museums (Prado, Reina Sofia).\n   - Enjoy vegetarian tapas in La Latina.\n   - Visit Retiro Park and the Royal Palace.\n\n2. **Day Trip to Toledo (1 Day)**:\n   - Discover the historic architecture and rich history.\n   - Try local vegetarian dishes like pisto manchego.\n\n3. **San Sebastián (3 Days)**:\n   - Relax on La Concha beach.\n   - Indulge in pintxos (Basque tapas) at local bars.\n   - Explore the old town and hike to Monte Igueldo for panoramic views.\n\n### Travel Considerations:\n- **Travel from Madrid to San Sebastián**: Approximately 5 hours by train or 1 hour by flight.\n- **San Sebastián to Madrid**: Similar travel time back for your departure.\n\n### Food Scene:\n- San Sebastián is renowned for its culinary scene, especially for pintxos, which can be easily adapted to vegetarian options.\n\nThis itinerary maintains your focus on culture and food while adding a beautiful coastal experience. Would you like help with specific restaurant recommendations or travel logistics?",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

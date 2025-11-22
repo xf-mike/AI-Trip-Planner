@@ -1,0 +1,13 @@
+{
+  "response": {
+    "mem_index": 10,
+    "owner": "agent",
+    "content": "Please provide me with the city and the dates for your travel so I can check the weather.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

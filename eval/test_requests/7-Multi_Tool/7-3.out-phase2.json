@@ -1,0 +1,26 @@
+{
+  "response": {
+    "mem_index": 0,
+    "owner": "agent",
+    "content": "It seems I couldn't retrieve the weather forecast for Yosemite this weekend. However, you can check a reliable weather website or app for the latest updates.\n\nHere are some popular hiking trails in Yosemite National Park:\n\n1. **Yosemite Falls** - A stunning hike with views of one of the tallest waterfalls in North America.\n2. **Mist Trail** - Leads to Vernal and Nevada Falls, offering breathtaking views.\n3. **Half Dome** - A challenging hike that rewards with panoramic views from the summit.\n4. **Clouds Rest** - A less crowded alternative to Half Dome with incredible vistas.\n5. **4-Mile Trail** - Connects Yosemite Valley to Glacier Point, providing spectacular views along the way.\n6. **Mirror Lake** - A relatively easy hike with beautiful reflections of the surrounding cliffs.\n\nMake sure to check trail conditions and any necessary permits before heading out!",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "[weather] Forecast fetch failed for Yosemite."
+      },
+      {
+        "name": "weather_tool",
+        "output": "[weather] Forecast fetch failed for Yosemite."
+      },
+      {
+        "name": "google_search_tool",
+        "output": "1. Absolutely must do trails in Yosemite : r/Yosemite: Mar 1, 2024 ... Yosemite falls · Mist trail · Half Dome · Clouds Rest · 4 Mile Trail · Mt. Dana · Mirror Lake.\n2. 27 Best Hikes in Yosemite National Park (2025) to Put on Your ...: Apr 11, 2025 ... John Muir Trail (211 miles long, 46,000 ft gain, thru-hike). Without further ado, here are 27 of the best hikes in Yosemite to inspire your next ...\n3. The 17 best hikes in Yosemite National Park (With Photos): Aug 23, 2025 ... Mist Trail: Vernal and Nevada Falls ... The most popular hike in Yosemite National Park is also one of the best. And for good reason. Hikers get ..."
+      }
+    ]
+  },
+  "evaluate": {}
+}

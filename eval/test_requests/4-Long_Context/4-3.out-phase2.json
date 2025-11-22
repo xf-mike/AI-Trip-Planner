@@ -1,0 +1,18 @@
+{
+  "response": {
+    "mem_index": 8,
+    "owner": "agent",
+    "content": "Here are some top-rated hostels in Ho Chi Minh City:\n\n1. **Dai Nam Sai Gon Hotel**\n2. **Aquarizon Boutique Hostel & City Bar**\n3. **Khoi Hostel**\n4. **Phan Anh Hostel**\n5. **Saigon Authentic Alley Hostel** - Offers breakfast, gym, and local tours.\n6. **Saigon Authentic Hostel** - Features breakfast, gym, and tours.\n\nThese hostels are well-reviewed and cater to various traveler needs.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "google_search_tool",
+        "output": "1. Social/Party Hostel in Ho Chi Minh City? : r/travel: Jun 2, 2024 ... If it's living up to your expectations after a few days, stick around, if not bounce to another place that seems cool. Consider getting a ...\n2. THE 10 BEST Ho Chi Minh City Hostels 2025 (with Prices ...: Hostels in Ho Chi Minh City · 1. Dai Nam Sai Gon Hotel · 2. Aquarizon Boutique Hostel & City Bar · 3. Khoi Hostel · 4. Phan Anh ...\n3. Best Hostels in Ho Chi Minh from €0.07 | 2025: Best hostels for solo travellers in Ho Chi Minh ; Saigon Authentic Alley Hostel - BF, Gym, LocalTour · (168) ; Saigon Authentic Hostel - Local, BF, Gym, Tours · ( ..."
+      }
+    ]
+  },
+  "evaluate": {}
+}

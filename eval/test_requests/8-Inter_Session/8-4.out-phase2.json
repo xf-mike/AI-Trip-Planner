@@ -1,0 +1,22 @@
+{
+  "response": {
+    "mem_index": 1,
+    "owner": "agent",
+    "content": "One popular specialty coffee place near the Pantheon is **La Casa del Caffè Tazza d'Oro**. It's well-known for its excellent coffee and is located right at Piazza della Rotonda. Another option is **LOVE Specialty Coffee**, which is also highly recommended.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "search_tool",
+        "output": "[search] No concise result for: specialty coffee near the Pantheon Rome. Try rephrasing or a more specific query."
+      },
+      {
+        "name": "google_search_tool",
+        "output": "1. Where To Find Specialty Coffee In Rome (for Coffee Nerds): Jul 31, 2025 ... Where to Find the Best Specialty Coffee in Rome · LOVE Specialty Coffee and Croissants (Multi Roaster) · Fax Factory (Multi Roaster) · Faro – Caffè ...\n2. Coffee Near Rome Pantheon - where to find the best! | romewise: Aug 31, 2022 ... Best local bars for coffee near the Pantheon in Rome, Italy · L'Antico Caffè della Pigna · Ciampini · Pascucci.\n3. The 7 Best Cafes in Rome That You Must Visit | Eating Europe: Nov 6, 2023 ... La Casa del Caffè Tazza d'Oro is a beloved Rome café on the corner of Piazza della Rotonda, a square where tourists wait in line for their turn ..."
+      }
+    ]
+  },
+  "evaluate": {}
+}

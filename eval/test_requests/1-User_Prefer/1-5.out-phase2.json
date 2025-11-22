@@ -1,0 +1,13 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "Great choice! Here’s a plan for your night in New York:\n\n### Neighborhood: East Village\n1. **Dinner: Momofuku Noodle Bar**\n   - Enjoy delicious ramen and other Asian-inspired dishes.\n   - Address: 171 1st Avenue\n\n2. **Bar: The Blind Barber**\n   - A barbershop by day and a lively bar by night, known for its cocktails and laid-back vibe.\n   - Address: 339 E 10th St\n\n3. **Live Music: Rockwood Music Hall**\n   - A great spot for live music with a variety of genres. Check their schedule for performances.\n   - Address: 196 Allen St\n\n### Alternative Neighborhood: Williamsburg\n1. **Dinner: Lilia**\n   - Known for its handmade pasta and Italian dishes.\n   - Address: 567 Union Ave\n\n2. **Bar: The Brooklyn Brewery**\n   - A local brewery with a great atmosphere and craft beers.\n   - Address: 79 N 11th St\n\n3. **Live Music: Brooklyn Steel**\n   - A popular venue for concerts, check if there are any shows that night.\n   - Address: 319 Frost St\n\n### Tips:\n- Make reservations for dinner if possible, as these places can get busy.\n- Check the live music schedules in advance to catch a show that interests you.\n\nLet me know if you need directions or more options!",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

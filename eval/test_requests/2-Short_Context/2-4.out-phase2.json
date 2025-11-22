@@ -1,0 +1,22 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "The weather in San Diego today is rainy, with a minimum temperature of 12.8°C and a maximum of 16.9°C. Expect about 9.0mm of precipitation.",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "[weather] Forecast fetch failed for San Diego."
+      },
+      {
+        "name": "weather_tool",
+        "output": "Weather in San Diego (United States) on 2025-11-21: rain, min 12.8°C / max 16.9°C, precip 9.0mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}

@@ -1,0 +1,13 @@
+{
+  "response": {
+    "mem_index": 1,
+    "owner": "agent",
+    "content": "The Hotel Duquesne Eiffel is indeed well-located, close to the Eiffel Tower and other attractions. If it was ruled out, it might have been due to factors like budget constraints, availability, or specific amenities that didn't meet your needs. \n\nWould you like me to check current availability and prices for the hotel?",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": []
+  },
+  "evaluate": {}
+}

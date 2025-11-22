@@ -1,0 +1,18 @@
+{
+  "response": {
+    "mem_index": 2,
+    "owner": "agent",
+    "content": "The weather in New York City for tomorrow (Thursday) is expected to be light rain, with a minimum temperature of 3.7°C and a maximum of 9.2°C. \n\nGiven the rain, it might be best to choose a park that has some sheltered areas or is close to indoor facilities. Would you like recommendations for parks in NYC that fit this criteria?",
+    "gen_by_engine": true,
+    "context_size": 20,
+    "use_ltm": true,
+    "memory_injected": [],
+    "use_tools": [
+      {
+        "name": "weather_tool",
+        "output": "Weather in New York (United States) on 2025-11-22: light rain, min 3.7°C / max 9.2°C, precip 2.5mm."
+      }
+    ]
+  },
+  "evaluate": {}
+}
